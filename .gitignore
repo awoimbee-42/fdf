@@ -1,0 +1,6 @@
+*.o
+*.a
+a.out.dSYM/
+fillit
+fillit-tests/
+input/
