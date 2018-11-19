@@ -1,15 +1,17 @@
 NAME	=	fdf
 
-LIB	=	minilibx/libmlx.a
+CC = gcc
+
+LIB	=	-L./minilibx ./minilibx/libmlx.a -lmlx -lXext -lX11
 
 SRC	=	main.c
 
-CFLAGS	=	-W
+CFLAGS	=	-Wall#-W
 
 all : $(NAME)
 
 $(NAME) : $(SRC) $(LIB)
-	$(CC) $(CFLAGS) $(SRC) -o $(NAME)
+	$(CC) $(CFLAGS) $(LIB) $(SRC) -o $(NAME)
 
 $(LIB) :
 	make -C minilibx/ all
