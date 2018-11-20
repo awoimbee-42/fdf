@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
+/*   Updated: 2018/11/20 16:01:45 by awoimbee         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fdf.h"
 
 void	chaos(void *fate)
@@ -6,35 +18,37 @@ void	chaos(void *fate)
 		exit(EXIT_FAILURE);
 }
 
-int		main(int argc, char **argv)
+t_map	read_map(char *filename)
 {
-	t_mlx	mlx; //Here I first create my struct that will contains all the "MLX stuff"
+
+}
+
+void	render(t_mlx *mlx)
+{
 	int		count_w;
 	int		count_h;
 
 	count_h = -1;
+	mlx->img.ptr = mlx_new_image(mlx->ptr, WIN_WIDTH, WIN_HEIGHT);
+	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.ptr, &mlx->img.bpp, &mlx->img.line_s, &mlx->img.endian);
+
+
+	t_coords p1 = {0, 0};
+	t_coords p2 = {350, 350};
+	draw_line(p2, p1, mlx->img.data);
+	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->img.ptr, 0, 0);
+}
+
+int		main(int argc, char **argv)
+{
+	t_mlx	mlx;
+
+
+	t_map map = read_map(argv[1]);
+
 	chaos((mlx.ptr = mlx_init()));
 	chaos((mlx.win = mlx_new_window(mlx.ptr, WIN_WIDTH, WIN_HEIGHT, "A simple example")));
-
-	mlx.img.ptr = mlx_new_image(mlx.ptr, WIN_WIDTH, WIN_HEIGHT);
-	mlx.img.data = (int *)mlx_get_data_addr(mlx.img.ptr, &mlx.img.bpp, &mlx.img.line_s,
-		&mlx.img.endian);
-	/*
-	 Now just a little example : here is a loop that will draw each pixels that
-	 have an odd width in white and the ones that have an even width in black.
-	*/
-	while (++count_h < WIN_HEIGHT)
-	{
-		count_w = -1;
-		while (++count_w < WIN_WIDTH)
-		{
-			if (count_w % 2)
-				mlx.img.data[count_h * WIN_WIDTH + count_w] = 0xFFFFFF;
-			else
-				mlx.img.data[count_h * WIN_WIDTH + count_w] = 0;
-		}
-	}
-	mlx_put_image_to_window(mlx.ptr, mlx.win, mlx.img.ptr, 0, 0);
+	render(&mlx);
 	mlx_loop(mlx.ptr);
 	return (0);
 }
