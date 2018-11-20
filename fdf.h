@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/20 17:31:17 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/20 17:58:51 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,23 @@ typedef struct	s_coords
 	int			y;
 }				t_coords;
 
+typedef struct	s_vertex
+{
+	float		x;
+	float		y;
+	float		z;
+}				t_vertex;
+
 typedef struct	s_map
 {
-	int			*coords;
+	t_vertex	*verts;
 	size_t		line_nb;
 }				t_map;
 
+
+
 void			draw_line(t_coords point1, t_coords point2, int *surface);
 void			msg_exit(char *msg, void *data);
-t_map			*read_map(t_map *map, char *filename)
+t_map			*read_map(t_map *map, char *filename);
 
 #endif

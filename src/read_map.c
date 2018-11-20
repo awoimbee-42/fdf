@@ -6,33 +6,35 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 17:30:46 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/20 17:30:58 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/20 18:12:19 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int		*map_realloc(int *old_tab, size_t addsize)
+int		map_realloc(t_map *map, size_t addsize)
 {
-	int			*nw_tab;
+	t_vertex	*nw_verts;
 	size_t		old_size;
 
-	if (old_tab)
+	if (map->verts)
 	{
 		old_size = 0;
-		while (old_tab[old_size] != 0xFFFF)
-			old_size += 3;
+		while (map->verts[old_size].x != __FLT_MAX__)
+			old_size += 1;
 	}
 	else
 		old_size = 0;
-	if (!(nw_tab = ft_memalloc((old_size + addsize) * sizeof(int))))
-		return (NULL);
+	if (!(nw_verts = ft_memalloc((old_size + addsize + 1) * sizeof(t_vertex))))
+		return (0);
 	if (old_size)
 	{
-		nw_tab = ft_memcpy(nw_tab, old_tab, old_size * sizeof(int));
-		free(old_tab);
+		nw_verts = ft_memcpy(nw_verts, map->verts, old_size * sizeof(t_vertex));
+		free(map->verts);
 	}
-	return (nw_tab);
+	nw_verts[old_size].x = __FLT_MAX__;
+	map->verts = nw_verts;
+	return (1);
 }
 
 void	fill_map_line(char **data, size_t line_nb, t_map *map)
@@ -45,22 +47,20 @@ void	fill_map_line(char **data, size_t line_nb, t_map *map)
 	tmp = data;
 	while (*tmp)
 		++tmp;
-	map->coords = map_realloc(map->coords, (tmp - data) * 3 + 1);
+	map_realloc(map, (tmp - data)); //NEED ERR CHECK
 	map_s = 0;
-	while (map->coords[map_s] != 0xFFFF)
-		map_s += 3;
+	while (map->verts[map_s].x != __FLT_MAX__)
+		map_s += 1;
 	data_s = 0;
 	while (data[data_s])
 	{
-		tmp_int = data_s;
-		ft_memcpy(&(map->coords[map_s++]), &tmp_int, sizeof(int));
-		tmp_int = line_nb;
-		ft_memcpy(&(map->coords[map_s++]), &tmp_int, sizeof(int));
-		tmp_int = ft_atoi(data[data_s]);
-		ft_memcpy(&(map->coords[map_s++]), &tmp_int, sizeof(int));
+		map->verts[map_s].x = data_s;
+		map->verts[map_s].y = line_nb;
+		map->verts[map_s].z = ft_atoi(data[data_s]);
+		map_s++;
 		data_s++;
 	}
-	map->coords[map_s] = 0xFFFF;
+	map->verts[map_s].x = __FLT_MAX__;
 }
 
 t_map	*read_map(t_map *map, char *filename)
@@ -79,9 +79,6 @@ t_map	*read_map(t_map *map, char *filename)
 		fill_map_line(tab, line_nb, map);
 		++line_nb;
 	}
-
-	map = malloc(sizeof(t_map));
-	map->coords = malloc(sizeof(int) * 3 * 10 + sizeof(int));
 
 
 	return (map);

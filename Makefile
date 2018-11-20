@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2018/11/20 17:28:38 by awoimbee         ###   ########.fr        #
+#    Updated: 2018/11/20 17:37:42 by awoimbee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,8 @@ LIB	+=	libs/libft/libft.a
 
 SRC	=	src/main.c			\
 		src/draw_line.c		\
-		src/useful_funcs.c
+		src/useful_funcs.c	\
+		src/read_map.c
 
 INCS	=	./ ./libs/
 
