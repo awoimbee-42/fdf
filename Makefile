@@ -4,7 +4,7 @@ CC = gcc
 
 LIB_X_FD = ./minilibx_macos
 
-LIB_X	=	$(LIB_X_FD)/libmlx.a -L$(LIB_X_FD) -framework OpenGL -framework AppKit
+LIB_X	=	$(LIB_X_FD)/libmlx.a -L$(LIB_X_FD) -lmlx -framework OpenGL -framework AppKit
 
 LIB_FT += libft/libft.a
 

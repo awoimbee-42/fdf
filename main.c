@@ -6,49 +6,35 @@ void	chaos(void *fate)
 		exit(EXIT_FAILURE);
 }
 
-// int		color_to_mess(t_color *col)
-// {
-// 		return(		col->a << 24
-// 				+	col->r << 16
-// 				+	col->g << 8
-// 				+	col->b << 0);
-// }
-
-void	nw_img(void *window, void *x11)
-{
-	void *img = mlx_new_image(x11, WIDTH, HEIGHT);
-	char *data = mlx_get_data_addr(img, 32, WIDTH * 4, ENDIAN);
-
-	int color = (0 << 24) + (255 << 0xF) + (255 << 0x8) + (255);
-	for (int i = 0; i < 700; i += 1)
-	{
-		for (int l = i; l < i * (700 * 4); l += 4)
-			ft_memcpy(data + l, &color, 4);
-	}
-	mlx_put_image_to_window(x11, window, img, 700, 700);
-}
-
 int		main(int argc, char **argv)
 {
-	void	*window;
-	void	*x11;
+	t_mlx	mlx; //Here I first create my struct that will contains all the "MLX stuff"
+	int		count_w;
+	int		count_h;
 
-	chaos((x11 = mlx_init ()));
-	chaos((window = mlx_new_window(x11, 700, 700, argv[0])));
-	//mlx_clear_window(x11, window);
+	count_h = -1;
+	chaos((mlx.ptr = mlx_init()));
+	chaos((mlx.win = mlx_new_window(mlx.ptr, WIN_WIDTH, WIN_HEIGHT, "A simple example")));
 
-
-
-
-
-	nw_img(window, x11);
-
-
-	sleep(10);
-
-	//mlx_loop(window);
-
-
-	mlx_destroy_window(x11, window);
+	mlx.img.ptr = mlx_new_image(mlx.ptr, WIN_WIDTH, WIN_HEIGHT);
+	mlx.img.data = (int *)mlx_get_data_addr(mlx.img.ptr, &mlx.img.bpp, &mlx.img.line_s,
+		&mlx.img.endian);
+	/*
+	 Now just a little example : here is a loop that will draw each pixels that
+	 have an odd width in white and the ones that have an even width in black.
+	*/
+	while (++count_h < WIN_HEIGHT)
+	{
+		count_w = -1;
+		while (++count_w < WIN_WIDTH)
+		{
+			if (count_w % 2)
+				mlx.img.data[count_h * WIN_WIDTH + count_w] = 0xFFFFFF;
+			else
+				mlx.img.data[count_h * WIN_WIDTH + count_w] = 0;
+		}
+	}
+	mlx_put_image_to_window(mlx.ptr, mlx.win, mlx.img.ptr, 0, 0);
+	mlx_loop(mlx.ptr);
 	return (0);
 }
