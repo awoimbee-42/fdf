@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2018/11/20 15:51:43 by awoimbee         ###   ########.fr        #
+#    Updated: 2018/11/20 17:28:38 by awoimbee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,16 +14,17 @@ NAME	=	fdf
 
 CC = gcc
 
-LIB_X_FD = ./minilibx_macos
+LIB_X_FD = ./libs/minilibx_macos
 
 LIB	=	$(LIB_X_FD)/libmlx.a -L$(LIB_X_FD) -lmlx -framework OpenGL -framework AppKit
 
-LIB	+=	libft/libft.a
+LIB	+=	libs/libft/libft.a
 
-SRC	=	main.c			\
-		draw_line.c
+SRC	=	src/main.c			\
+		src/draw_line.c		\
+		src/useful_funcs.c
 
-INCS	=	./ ./libft/
+INCS	=	./ ./libs/
 
 CFLAGS	=	-Wall -g -O0
 
@@ -36,11 +37,11 @@ mlx :
 	make -C $(LIB_X_FD) all
 
 libft :
-	make -C libft/ all
+	make -C libs/libft/ all
 
 clean :
 	make -C $(LIB_X_FD) clean
-	make -C libft/ clean
+	make -C libs/libft/ clean
 
 fclean : clean
 	rm -rf $(NAME)

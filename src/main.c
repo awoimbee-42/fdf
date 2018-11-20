@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/20 16:01:45 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/20 17:31:19 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,8 @@ void	chaos(void *fate)
 		exit(EXIT_FAILURE);
 }
 
-t_map	read_map(char *filename)
-{
 
-}
-
-void	render(t_mlx *mlx)
+void	render(t_mlx *mlx, t_map *map)
 {
 	int		count_w;
 	int		count_h;
@@ -31,6 +27,12 @@ void	render(t_mlx *mlx)
 	count_h = -1;
 	mlx->img.ptr = mlx_new_image(mlx->ptr, WIN_WIDTH, WIN_HEIGHT);
 	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.ptr, &mlx->img.bpp, &mlx->img.line_s, &mlx->img.endian);
+
+
+
+
+
+
 
 
 	t_coords p1 = {0, 0};
@@ -42,13 +44,14 @@ void	render(t_mlx *mlx)
 int		main(int argc, char **argv)
 {
 	t_mlx	mlx;
+	t_map	*map;
 
-
-	t_map map = read_map(argv[1]);
+	map = malloc(sizeof(t_map));
+	map = read_map(map, argv[1]);
 
 	chaos((mlx.ptr = mlx_init()));
 	chaos((mlx.win = mlx_new_window(mlx.ptr, WIN_WIDTH, WIN_HEIGHT, "A simple example")));
-	render(&mlx);
+	render(&mlx, map);
 	mlx_loop(mlx.ptr);
 	return (0);
 }
