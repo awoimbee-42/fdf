@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/21 17:58:26 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/21 18:56:05 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	chaos(void *fate)
 	if (fate == NULL)
 		exit(EXIT_FAILURE);
 }
-
 
 
 /*
@@ -42,7 +41,7 @@ void	rotate(t_vertex *vert, double theta_x, double theta_y) //, double theta_z f
 	rotate2d(&vert->y, &vert->z, theta_x);
 }
 
-void	render(t_mlx *mlx, t_map *map, double theta_x, double theta_y)
+void	render(t_mlx *mlx, t_map *map, t_vertex rot)
 {
 	int			count_w;
 	int			count_h;
@@ -72,13 +71,13 @@ void	render(t_mlx *mlx, t_map *map, double theta_x, double theta_y)
 		{
 			vert.x = (count_w - (map->size.x / 2.)) / map->size.x;
 			vert.y = (count_h - (map->size.x / 2.)) / map->size.x;
-			vert.z = (map->heightmap[count_h][count_w] - (delta_z / 2.)) / delta_z;
+			vert.z = (map->heightmap[count_h][count_w] - (delta_z / 2.)) / delta_z * -1;
 
-			rotate(&vert, theta_x, theta_y);
+			rotate(&vert, rot.x, rot.z);
 
 			f = 500; //fov ~ zoom
 			p1.x = (int)((vert.x * f) + (WIN_WIDTH / 2.));
-			p1.y = (int)((vert.y * f) + (WIN_HEIGHT / 2.));
+			p1.y = (int)((vert.z * f) + (WIN_HEIGHT / 2.));
 
 			buffer.verts[count_h][count_w] = p1;
 			count_w++;
@@ -89,10 +88,19 @@ void	render(t_mlx *mlx, t_map *map, double theta_x, double theta_y)
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->img.ptr, 0, 0);
 }
 
+int keypress(int keycode, void *param)
+{
+	t_vertex	*rot;
+
+	rot = (t_vertex*)param;
+
+}
+
 int		main(int argc, char **argv)
 {
 	t_mlx	mlx;
 	t_map	*map;
+
 
 	map = malloc(sizeof(t_map));
 	map->heightmap = NULL;
@@ -100,7 +108,11 @@ int		main(int argc, char **argv)
 
 	chaos((mlx.ptr = mlx_init()));
 	chaos((mlx.win = mlx_new_window(mlx.ptr, WIN_WIDTH, WIN_HEIGHT, "A simple example")));
-	render(&mlx, map, 0, 0); //M_PI/2
+	t_vertex rotation = {0., 0., 0.};
+	render(&mlx, map, rotation); //M_PI/2
+
+	mlx_key_hook (mlx.win, &keypress, &rotation);
+
 	mlx_loop(mlx.ptr);
 	return (0);
 }

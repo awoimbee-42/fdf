@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/21 17:54:34 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/21 18:33:12 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct	s_vertex
 /*
 **	Each line of heightmap is terminated by INT_MIN
 */
+
 typedef struct	s_map
 {
 	int			**heightmap;
