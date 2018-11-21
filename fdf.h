@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/21 15:15:16 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/21 16:30:51 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,13 @@ typedef struct	s_map
 	int			z_max;
 	int			z_min;
 }				t_map;
+
+typedef struct	s_vertices
+{
+	t_coords	**verts;
+	t_coords	size;
+}				t_vertices;
+
 
 void			draw_line(t_coords point1, t_coords point2, int *surface);
 void			msg_exit(char *msg, void *data);
