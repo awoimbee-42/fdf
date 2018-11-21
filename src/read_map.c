@@ -6,49 +6,22 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 17:30:46 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/21 15:15:21 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/21 17:53:03 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
 /*
-int		map_realloc(t_map *map, size_t addsize)
-{
-	int			*nw_hmap;
-	size_t		old_size;
-
-	if (map->heightmap)
-	{
-		old_size = 0;
-		while (map->heightmap[old_size] != INT_MIN)
-			old_size += 1;
-	}
-	else
-		old_size = 0;
-	if (!(nw_hmap = ft_memalloc((old_size + addsize + 1) * sizeof(int))))
-		return (0);
-	if (old_size)
-	{
-		nw_hmap = ft_memcpy(nw_hmap, map->heightmap, old_size * sizeof(int));
-		free(map->heightmap);
-	}
-	nw_hmap[old_size] = INT_MIN;
-	map->heightmap = nw_hmap;
-	return (1);
-}
-*/
-
-
-/*
 **	Returns nb of int read
 */
-int		fill_map_line(char **data, size_t line_nb, t_map *map)
+
+int				fill_map_line(char **data, size_t line_nb, t_map *map)
 {
-	char	**tmp;
-	size_t	data_len;
-	int		**heightmap;
-	int		height;
+	char		**tmp;
+	size_t		data_len;
+	int			**heightmap;
+	int			height;
 
 	heightmap = map->heightmap;
 	tmp = data;
@@ -71,7 +44,7 @@ int		fill_map_line(char **data, size_t line_nb, t_map *map)
 	return (data_len);
 }
 
-static	size_t map_height(char *filename)
+static	size_t	map_height(char *filename)
 {
 	size_t		line_nb;
 	int			fd;
@@ -87,16 +60,15 @@ static	size_t map_height(char *filename)
 	if (close(fd) == -1)
 		msg_exit("cannot close file", NULL);
 	return (line_nb);
-
 }
 
-t_map	*read_map(t_map *map, char *filename)
+t_map			*read_map(t_map *map, char *filename)
 {
-	char	*line;
-	char	**tab;
-	int		fd;
-	size_t	line_nb;
-	int		len;
+	char		*line;
+	char		**tab;
+	int			fd;
+	size_t		line_nb;
+	int			len;
 
 	map->size.y = map_height(filename);
 	map->heightmap = malloc(map->size.y * sizeof(int*));

@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/21 17:17:34 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/21 17:58:26 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,30 +19,6 @@ void	chaos(void *fate)
 }
 
 
-void		draw_all_lines(t_vertices *buffer, int width, int height, int *data)
-{
-	int		x;
-	int		y;
-
-	y = -1;
-	while (++y < height)
-	{
-		x = -1;
-		while (buffer->verts[y][++x].x != INT_MIN)
-		{
-			if (y + 1 < height)
-			{
-				fprintf(stderr, "%d, %d\t->\t%d, %d\n", buffer->verts[y][x].x, buffer->verts[y][x].y, buffer->verts[y + 1][x].x, buffer->verts[y + 1][x].y);
-				draw_line(buffer->verts[y][x], buffer->verts[y + 1][x], data);
-			}
-			if (buffer->verts[y][x + 1].x != INT_MIN)
-			{
-				draw_line(buffer->verts[y][x], buffer->verts[y][x + 1], data);
-			}
-		}
-	}
-
-}
 
 /*
 **	2D rotation of the axis going from the origin to the vertex
@@ -80,8 +56,6 @@ void	render(t_mlx *mlx, t_map *map, double theta_x, double theta_y)
 	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.ptr, &mlx->img.bpp, &mlx->img.line_s, &mlx->img.endian);
 
 
-
-	//this is not just a test anymore
 	i = 0;
 	if (!(buffer.verts = malloc(map->size.y * sizeof(t_coords*))))
 		msg_exit("cannot allocate enough memory.", 0);
@@ -100,24 +74,18 @@ void	render(t_mlx *mlx, t_map *map, double theta_x, double theta_y)
 			vert.y = (count_h - (map->size.x / 2.)) / map->size.x;
 			vert.z = (map->heightmap[count_h][count_w] - (delta_z / 2.)) / delta_z;
 
-			fprintf(stderr, "%d ", map->heightmap[count_h][count_w]);
-
 			rotate(&vert, theta_x, theta_y);
 
 			f = 500; //fov ~ zoom
 			p1.x = (int)((vert.x * f) + (WIN_WIDTH / 2.));
 			p1.y = (int)((vert.y * f) + (WIN_HEIGHT / 2.));
-			//fprintf(stderr, "X: %d\tY: %d\n", p1.x, p1.y);
 
-			//draw_line(p1, p2, mlx->img.data);
 			buffer.verts[count_h][count_w] = p1;
 			count_w++;
 		}
 		buffer.verts[count_h][count_w] = end;
-
-		fprintf(stderr, "\n");
 	}
-	draw_all_lines(&buffer, map->size.x, map->size.y, mlx->img.data);
+	draw_all_lines(&buffer, map->size.y, mlx->img.data);
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->img.ptr, 0, 0);
 }
 
@@ -132,7 +100,7 @@ int		main(int argc, char **argv)
 
 	chaos((mlx.ptr = mlx_init()));
 	chaos((mlx.win = mlx_new_window(mlx.ptr, WIN_WIDTH, WIN_HEIGHT, "A simple example")));
-	render(&mlx, map, 0, 1.2); //M_PI/2
+	render(&mlx, map, 0, 0); //M_PI/2
 	mlx_loop(mlx.ptr);
 	return (0);
 }

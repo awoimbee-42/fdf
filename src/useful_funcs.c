@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   useful_funcs.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/11/21 17:47:40 by awoimbee          #+#    #+#             */
+/*   Updated: 2018/11/21 17:51:14 by awoimbee         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 /*
 **	msg_exit : a printf for crashing cleanly.
 **	USAGE : msg_exit("error %[d, s]...", memory)
@@ -20,19 +32,16 @@ void	msg_exit(char *msg, void *data)
 		while (msg[len] && msg[len] != '%')
 			++len;
 		write(2, (void *)msg, len);
-		if (msg[len] == '%')
+		if (msg[len++] == '%')
 		{
-			msg = &msg[len + 1];
-			var = NULL;
-			if (*msg == 'd')
+			if (msg[len] == 'd')
 				var = ft_itoa(*(int*)data);
-			else if (*msg == 's')
+			else if (msg[len] == 's')
 				var = (char*)data;
-			if (var)
-			{
-				len = ft_strlen(var);
-				write(2, var, len);
-			}
+			else
+				msg_exit(&msg[len], data);
+			len = ft_strlen(var);
+			write(2, var, len);
 		}
 		write(2, "\n", 1);
 	}
