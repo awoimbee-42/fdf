@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/22 14:54:38 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/22 17:26:35 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ typedef struct	s_map
 {
 	int			**heightmap;
 	t_coords	size;
-	int			z_max;
-	int			z_min;
+	float		delta;
+	float		mean;
 }				t_map;
 
 typedef struct	s_vertices
@@ -82,6 +82,7 @@ typedef struct	s_data
 	t_mlx		*mlx;
 	t_map		*map;
 	t_vertex	rot;
+	float		zoom;
 }				t_data;
 
 void			draw_all_lines(t_vertices *buffer, int height, int *data);

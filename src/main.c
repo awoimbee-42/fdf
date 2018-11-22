@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/22 16:36:44 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/22 17:26:15 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	rotate2d(double *vert1, double *vert2, double theta)
 	*vert2 = *vert2 * cos_ + *vert1 * sin_;
 }
 
-void	rotate(t_vertex *vert, t_vertex *rot) //, double theta_z for rotation around z ?
+void		rotate(t_vertex *vert, t_vertex *rot) //, double theta_z for rotation around z ?
 {
 	rotate2d(&vert->x, &vert->z, rot->x); //roll
 
@@ -44,7 +44,7 @@ void	rotate(t_vertex *vert, t_vertex *rot) //, double theta_z for rotation aroun
 	rotate2d(&vert->x, &vert->y, rot->z); //yaw
 }
 
-static void	normalize_to_window(t_coords *point)
+void		normalize_to_window(t_coords *point)
 {
 	if (point->x >= WIN_WIDTH)
 		point->x = WIN_WIDTH - 1;
@@ -56,49 +56,44 @@ static void	normalize_to_window(t_coords *point)
 		point->y = 0;
 }
 
-void	render(t_mlx *mlx, t_map *map, t_vertex rot)
+void	render(t_mlx *mlx, t_map *map, t_vertex rot, float zoom)
 {
-	int			count_w;
-	int			count_h;
+	t_coords	pos;
 	t_vertex	vert;
-	double		f;
-	int			delta_z;
+	float		fov;
 	t_vertices	buffer;
-	int			i;
+	t_coords	px;
 
 	mlx->img.ptr = mlx_new_image(mlx->ptr, WIN_WIDTH, WIN_HEIGHT);
 	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.ptr, &mlx->img.bpp, &mlx->img.line_s, &mlx->img.endian);
 
-	int zoom = 500;
-	i = 0;
 	if (!(buffer.verts = malloc(map->size.y * sizeof(t_coords*))))
 		msg_exit("cannot allocate enough memory.", 0);
-	delta_z = map->z_max - map->z_min;
-	t_coords p1;
-	t_coords end = {INT_MIN, INT_MIN};
-	count_h = -1;
-	while (++count_h < map->size.y)
+
+	pos.y = -1;
+	while (++pos.y < map->size.y)
 	{
-		if (!(buffer.verts[count_h] = malloc(map->size.x * sizeof(t_coords))))
+		if (!(buffer.verts[pos.y] = malloc(map->size.x * sizeof(t_coords))))
 			msg_exit("cannot allocate enough memory.", 0);
-		count_w = 0;
-		while (map->heightmap[count_h][count_w] != INT_MIN)
+		pos.x = 0;
+		while (map->heightmap[pos.y][pos.x] != INT_MIN)
 		{
-			vert.x = (count_w - (map->size.x / 2.)) / map->size.x * zoom;
-			vert.y = (count_h - (map->size.x / 2.)) / map->size.x * zoom;
-			vert.z = (map->heightmap[count_h][count_w] - (delta_z / 2.)) / delta_z * -1 * zoom;
+			vert.x = (pos.x - (map->size.x / 2.)) / map->size.x * zoom;
+			vert.y = (pos.y - (map->size.x / 2.)) / map->size.x * zoom;
+			vert.z = (map->heightmap[pos.y][pos.x] - map->mean) / map->delta * -1 * zoom;
 
 			rotate(&vert, &rot);
 
-			f = tan(1.22173047/2); //fov = 70
-			p1.x = (int)((vert.x * f) + (WIN_WIDTH / 2.));
-			p1.y = (int)((vert.z * f) + (WIN_HEIGHT / 2.));
+			fov = tan(1.22173047/2); //fov = 70
+			px.x = (int)((vert.x * fov) + (WIN_WIDTH / 2.));
+			px.y = (int)((vert.z * fov) + (WIN_HEIGHT / 2.));
 
-			normalize_to_window(&p1);
-			buffer.verts[count_h][count_w] = p1;
-			count_w++;
+			normalize_to_window(&px);
+			buffer.verts[pos.y][pos.x] = px;
+			pos.x++;
 		}
-		buffer.verts[count_h][count_w] = end;
+		while (pos.x <= map->size.x)
+			buffer.verts[pos.y][pos.x++].x = INT_MIN;
 	}
 	draw_all_lines(&buffer, map->size.y, mlx->img.data);
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->img.ptr, 0, 0);
@@ -120,7 +115,7 @@ int keypress(int keycode, void *param)
 	else if (keycode == 125)
 		data->rot.x -= M_PI / 8.;
 	fprintf(stderr, "keypressed: %d\n", keycode);
-	render(data->mlx, data->map, data->rot);
+	render(data->mlx, data->map, data->rot, data->zoom);
 	return (1);
 }
 
@@ -142,7 +137,8 @@ int		main(int argc, char **argv)
 	data.rot.z = 0;
 	data.map = map;
 	data.mlx = &mlx;
-	render(&mlx, map, data.rot); //M_PI/2
+	data.zoom = WIN_WIDTH / 2;
+	render(&mlx, map, data.rot, data.zoom); //M_PI/2
 
 	mlx_key_hook (mlx.win, &keypress, &data);
 
