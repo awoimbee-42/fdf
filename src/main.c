@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/22 19:10:09 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/22 19:18:10 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void		normalize_to_window(t_coords *point)
 
 static int	col_function(t_uchar c, float zh, int min, int max)
 {
+
 	return ((zh - min) / (max + min) * c)
 }
 
