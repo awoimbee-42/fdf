@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:26 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/22 16:25:57 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/22 18:04:22 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,11 @@ void		draw_all_lines(t_vertices *buffer, int height, int *data)
 		x = 0;
 		while (buffer->verts[y][++x].x != INT_MIN)
 		{
-			if (buffer->verts[y - 1][x].x != INT_MIN)
+			if (buffer->verts[y][x].x == __INT_MAX__)
+				continue ;
+			if (buffer->verts[y - 1][x].x != INT_MIN && buffer->verts[y - 1][x].x != __INT_MAX__)
 				draw_line(buffer->verts[y][x], buffer->verts[y - 1][x], data);
-			if (buffer->verts[y][x - 1].x != INT_MIN)
+			if (buffer->verts[y][x - 1].x != __INT_MAX__)
 				draw_line(buffer->verts[y][x], buffer->verts[y][x - 1], data);
 		}
 	}

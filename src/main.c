@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/22 17:26:15 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/22 19:10:09 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,13 @@ static void	rotate2d(double *vert1, double *vert2, double theta)
 
 void		rotate(t_vertex *vert, t_vertex *rot) //, double theta_z for rotation around z ?
 {
-	rotate2d(&vert->x, &vert->z, rot->x); //roll
 
-	//rotate2d(&vert->z, &vert->x, rot->y); //pitch
+
+	rotate2d(&vert->z, &vert->x, rot->y); //pitch
 
 	rotate2d(&vert->x, &vert->y, rot->z); //yaw
+
+	rotate2d(&vert->x, &vert->z, rot->x); //roll
 }
 
 void		normalize_to_window(t_coords *point)
@@ -56,7 +58,17 @@ void		normalize_to_window(t_coords *point)
 		point->y = 0;
 }
 
-void	render(t_mlx *mlx, t_map *map, t_vertex rot, float zoom)
+static int	col_function(t_uchar c, float zh, int min, int max)
+{
+	return ((zh - min) / (max + min) * c)
+}
+
+int		product_rgb(t_uchar *rgb, float zh, t_map *map)
+{
+	int color = (zh - map->min) / (map->max + map->min) * 100
+}
+
+void	render(t_mlx *mlx, t_map *map, t_vertex rot, float zoom, t_data *data)
 {
 	t_coords	pos;
 	t_vertex	vert;
@@ -78,9 +90,11 @@ void	render(t_mlx *mlx, t_map *map, t_vertex rot, float zoom)
 		pos.x = 0;
 		while (map->heightmap[pos.y][pos.x] != INT_MIN)
 		{
-			vert.x = (pos.x - (map->size.x / 2.)) / map->size.x * zoom;
-			vert.y = (pos.y - (map->size.x / 2.)) / map->size.x * zoom;
-			vert.z = (map->heightmap[pos.y][pos.x] - map->mean) / map->delta * -1 * zoom;
+			vert.x = (pos.x - (map->size.x / 2.)) / map->size.x * data->zoom;
+			vert.y = (pos.y - (map->size.x / 2.)) / map->size.x * data->zoom;
+			vert.z = (map->heightmap[pos.y][pos.x] - map->mean) / map->delta * -1 * data->zoom;
+
+			buffer.verts[pos.y][pos.x].color = product_rgb(data->rgb, vert.z, map);
 
 			rotate(&vert, &rot);
 
@@ -111,12 +125,17 @@ int keypress(int keycode, void *param)
 		data->rot.z -= M_PI / 8.;
 	// pitch
 	else if (keycode == 126)
-		data->rot.x += M_PI / 8.;
+		data->rot.y += M_PI / 8.;
 	else if (keycode == 125)
-		data->rot.x -= M_PI / 8.;
+		data->rot.y -= M_PI / 8.;
 	fprintf(stderr, "keypressed: %d\n", keycode);
-	render(data->mlx, data->map, data->rot, data->zoom);
+	render(data->mlx, data->map, data->rot, data->zoom, data);
 	return (1);
+}
+
+void	fill_color(t_uchar *rgb)
+{
+	*(int*)rgb = 0xFFFFFF;
 }
 
 int		main(int argc, char **argv)
@@ -124,8 +143,9 @@ int		main(int argc, char **argv)
 	t_mlx	mlx;
 	t_map	*map;
 	t_data	data;
+	t_uchar	rgb[3];
 
-
+	fill_color((t_uchar*)rgb);
 	map = malloc(sizeof(t_map));
 	map->heightmap = NULL;
 	map = read_map(map, argv[1]);
@@ -138,6 +158,7 @@ int		main(int argc, char **argv)
 	data.map = map;
 	data.mlx = &mlx;
 	data.zoom = WIN_WIDTH / 2;
+	fill_color((t_uchar*)data.rgb);
 	render(&mlx, map, data.rot, data.zoom); //M_PI/2
 
 	mlx_key_hook (mlx.win, &keypress, &data);
