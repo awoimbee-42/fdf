@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/23 12:00:07 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/23 17:34:59 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/23 20:15:48 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,5 @@ void	render(t_mlx *mlx, t_map *map, t_data *data)
 	actually_render(pos, map, data);
 	draw_all_lines(data->zbuff, map->size.y, mlx->img.data);
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->img.ptr, 0, 0);
+	mlx_destroy_image(mlx->ptr, mlx->img.ptr);
 }

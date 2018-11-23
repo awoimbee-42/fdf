@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/23 18:02:37 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/23 20:12:49 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,19 +81,25 @@ void	init(t_map *map, t_data *data, t_mlx *mlx, char *filename)
 
 int		main(int argc, char **argv)
 {
-	t_mlx	mlx;
+	t_mlx	*mlx;
 	t_map	*map;
 	t_data	*data;
 
 	data = NULL;
-	if (!(map = malloc(sizeof(t_map))) || !(data = malloc(sizeof(t_data))))
+	map = NULL;
+	mlx = NULL;
+	if (!(map = malloc(sizeof(t_map)))
+	|| !(data = malloc(sizeof(t_data)))
+	|| !(mlx = malloc(sizeof(t_mlx))))
 		msg_exit("niet.", 0);
-	init(map, data, &mlx, argv[1]);
+	init(map, data, mlx, argv[1]);
 
-	render(&mlx, data->map, data); //M_PI/2
+	render(mlx, data->map, data); //M_PI/2
 
-	mlx_key_hook (mlx.win, &keypress, &data);
+	//data is becoming currupted befor the keydown function is called !
 
-	mlx_loop(mlx.ptr);
+	mlx_key_hook (mlx->win, &keypress, &data);
+
+	mlx_loop(mlx->ptr);
 	return (0);
 }

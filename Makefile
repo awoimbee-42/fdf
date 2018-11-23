@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2018/11/23 12:17:38 by awoimbee         ###   ########.fr        #
+#    Updated: 2018/11/23 18:54:57 by awoimbee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,9 +24,10 @@ else
 	#"Don't forget you need libxext-dev & libx11-dev"
 endif
 
-LIB	=	$(LIB_X_FD)/libmlx.a -L$(LIB_X_FD) -lm -lmlx $(FRAMWRK)
-
-LIB	+=	libs/libft/libft.a
+LIB	=	$(LIB_X_FD)/libmlx.a	\
+		libs/libft/libft.a		\
+		-L$(LIB_X_FD)			\
+		-lm -lmlx $(FRAMWRK)
 
 SRC	=	src/main.c			\
 		src/draw_line.c		\
@@ -41,7 +42,7 @@ CFLAGS	=	-Wall -g -O0
 all : $(NAME)
 
 $(NAME) : $(SRC) mlx libft
-	$(CC) $(CFLAGS) $(LIB) $(addprefix -I,$(INCS)) $(SRC) -o $(NAME)
+	$(CC) $(CFLAGS) $(addprefix -I,$(INCS)) $(SRC) $(LIB) -o $(NAME)
 
 mlx :
 	make -C $(LIB_X_FD) all
