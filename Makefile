@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
+#    By: arthur <arthur@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2018/11/20 17:37:42 by awoimbee         ###   ########.fr        #
+#    Updated: 2018/11/23 00:58:39 by arthur           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,17 @@ NAME	=	fdf
 
 CC = gcc
 
-LIB_X_FD = ./libs/minilibx_macos
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+	LIB_X_FD = ./libs/minilibx_macos
+	FRAMWRK = -framework OpenGL -framework AppKit
+else
+	LIB_X_FD = ./libs/minilibx_x11
+	FRAMWRK = -lXext -lX11
+	#"Don't forget you need libxext-dev & libx11-dev"
+endif
 
-LIB	=	$(LIB_X_FD)/libmlx.a -L$(LIB_X_FD) -lmlx -framework OpenGL -framework AppKit
+LIB	=	$(LIB_X_FD)/libmlx.a -L$(LIB_X_FD) -lm -lmlx $(FRAMWRK)
 
 LIB	+=	libs/libft/libft.a
 
@@ -25,7 +33,7 @@ SRC	=	src/main.c			\
 		src/useful_funcs.c	\
 		src/read_map.c
 
-INCS	=	./ ./libs/
+INCS	=	./ ./libs/ $(LIB_X_FD)
 
 CFLAGS	=	-Wall -g -O0
 
