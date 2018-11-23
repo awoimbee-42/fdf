@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/22 19:03:51 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/23 12:19:11 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,13 @@ typedef struct	s_data
 	t_map		*map;
 	t_vertex	rot;
 	float		zoom;
-	t_uchar		rgb[3];
+	t_uchar		*rgb;
 }				t_data;
 
 void			draw_all_lines(t_vertices *buffer, int height, int *data);
 void			msg_exit(char *msg, void *data);
 t_map			*read_map(t_map *map, char *filename);
+void			render(t_mlx *mlx, t_map *map, t_data *data);
+void			normalize_to_window(t_coords *point);
 
 #endif

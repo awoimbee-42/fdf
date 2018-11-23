@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:26 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/22 18:04:22 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/23 11:03:06 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	draw_line_higrad(t_coords p0, t_coords p1, int *img)
 	error = 2 * delta.x - delta.y;
 	while (p0.y < p1.y)
 	{
-		img[(p0.y * WIN_WIDTH + p0.x)] = 0xFFFFFF;
+		img[(p0.y * WIN_WIDTH + p0.x)] = p0.color;
 		if (error > 0)
 		{
 			p0.x += way_x;
@@ -51,7 +51,7 @@ static void	draw_line_lograd(t_coords p0, t_coords p1, int *img)
 	error = 2 * delta.y - delta.x;
 	while (p0.x < p1.x)
 	{
-		img[(p0.y * WIN_WIDTH + p0.x)] = 0xFFFFFF;
+		img[(p0.y * WIN_WIDTH + p0.x)] = p0.color;
 		if (error > 0)
 		{
 			p0.y += way_y;
