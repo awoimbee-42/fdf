@@ -6,13 +6,13 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:26 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/23 11:03:06 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/23 17:53:06 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static void	draw_line_higrad(t_coords p0, t_coords p1, int *img)
+static void	draw_line_higrad(t_vertices p0, t_vertices p1, int *img)
 {
 	t_coords	delta;
 	int			way_x;
@@ -37,7 +37,7 @@ static void	draw_line_higrad(t_coords p0, t_coords p1, int *img)
 	}
 }
 
-static void	draw_line_lograd(t_coords p0, t_coords p1, int *img)
+static void	draw_line_lograd(t_vertices p0, t_vertices p1, int *img)
 {
 	t_coords	delta;
 	int			way_y;
@@ -51,7 +51,7 @@ static void	draw_line_lograd(t_coords p0, t_coords p1, int *img)
 	error = 2 * delta.y - delta.x;
 	while (p0.x < p1.x)
 	{
-		img[(p0.y * WIN_WIDTH + p0.x)] = p0.color;
+		img[(p0.y * WIN_WIDTH + p0.x)] = p0.color < p1.color ? p0.color : p1.color;
 		if (error > 0)
 		{
 			p0.y += way_y;
@@ -62,8 +62,14 @@ static void	draw_line_lograd(t_coords p0, t_coords p1, int *img)
 	}
 }
 
-static void	draw_line(t_coords p0, t_coords p1, int *img)
+static void	draw_line(t_vertices p0, t_vertices p1, int *img)
 {
+	if(p0.x < 0 || p0.x > WIN_WIDTH || p0.y < 0 || p0.y > WIN_HEIGHT
+	|| p1.x < 0 || p1.x > WIN_WIDTH || p1.y < 0 || p1.y > WIN_HEIGHT)
+	{
+		fprintf(stderr, "FUCKYOU\t");
+		return ;
+	}
 	if (abs(p1.y - p0.y) < abs(p1.x - p0.x))
 	{
 		if (p0.x > p1.x) // line is more horizontal
@@ -71,7 +77,7 @@ static void	draw_line(t_coords p0, t_coords p1, int *img)
 		else
 			draw_line_lograd(p0, p1, img);
 	}
-	else   // kine is more vertical
+	else   // line is more vertical
 	{
 		if (p0.y > p1.y)
 			draw_line_higrad(p1, p0, img);
@@ -80,23 +86,23 @@ static void	draw_line(t_coords p0, t_coords p1, int *img)
 	}
 }
 
-void		draw_all_lines(t_vertices *buffer, int height, int *data)
+void		draw_all_lines(t_vertices **buffer, int height, int *data)
 {
 	int			x;
 	int			y;
 
-	y = 0;
+	y = -1;
 	while (++y < height)
 	{
-		x = 0;
-		while (buffer->verts[y][++x].x != INT_MIN)
+		x = -1;
+		while (buffer[y][++x].x != INT_MIN)
 		{
-			if (buffer->verts[y][x].x == __INT_MAX__)
+			if (buffer[y][x].x == __INT_MAX__)
 				continue ;
-			if (buffer->verts[y - 1][x].x != INT_MIN && buffer->verts[y - 1][x].x != __INT_MAX__)
-				draw_line(buffer->verts[y][x], buffer->verts[y - 1][x], data);
-			if (buffer->verts[y][x - 1].x != __INT_MAX__)
-				draw_line(buffer->verts[y][x], buffer->verts[y][x - 1], data);
+			if (y != 0 && buffer[y - 1][x].x != INT_MIN && buffer[y - 1][x].x != __INT_MAX__)
+				draw_line(buffer[y][x], buffer[y - 1][x], data);
+			if (x != 0 && buffer[y][x - 1].x != __INT_MAX__)
+				draw_line(buffer[y][x], buffer[y][x - 1], data);
 		}
 	}
 }

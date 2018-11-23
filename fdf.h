@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/23 12:19:11 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/23 17:50:00 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <math.h>		//cos() sin()
 
 # define INT_MIN -2147483648
+# define INT_MAX 2147483647
 # define WIN_HEIGHT 1000
 # define WIN_WIDTH 1000
 # define ENDIAN 0
@@ -76,20 +77,23 @@ typedef struct	s_map
 
 typedef struct	s_vertices
 {
-	t_coords	**verts;
-	t_coords	size;
+	int			x;
+	int			y;
+	int			depth;
+	int			color;
 }				t_vertices;
 
 typedef struct	s_data
 {
 	t_mlx		*mlx;
 	t_map		*map;
+	t_vertices	**zbuff;
 	t_vertex	rot;
 	float		zoom;
-	t_uchar		*rgb;
+	int			rgb;
 }				t_data;
 
-void			draw_all_lines(t_vertices *buffer, int height, int *data);
+void			draw_all_lines(t_vertices **buffer, int height, int *data);
 void			msg_exit(char *msg, void *data);
 t_map			*read_map(t_map *map, char *filename);
 void			render(t_mlx *mlx, t_map *map, t_data *data);
