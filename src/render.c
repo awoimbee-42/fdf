@@ -6,7 +6,7 @@
 /*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/23 12:00:07 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/24 01:56:39 by arthur           ###   ########.fr       */
+/*   Updated: 2018/11/24 17:10:13 by arthur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,23 @@ void		rotate(t_vertex *vert, t_vertex *rot)
 	rotate2d(&vert->x, &vert->y, rot->z);
 }
 
-int		get_rgb(int rgb, double zh, t_map *map)
+int		get_rgb(int rgb, double zh)
 {
-	double		coeff;
 	int			color;
-	t_uchar		tmp;
+	int			tmp;
+	int			i;
+	int			add;
 
 	color = 0;
-	coeff = (zh + 0.6) / 1.1; // needs to be a plus
-	tmp = coeff * (rgb & 0xFF) > 255 ? 255 : coeff * (rgb & 0xFF);
-	color |= tmp;
-	tmp = coeff * (rgb & 0xFF00) > 0xFF00 ? 0xFF00 : coeff * (rgb & 0xFF00);
-	color |= tmp;
-	tmp = coeff * (rgb & 0xFF0000) > 0xFF0000 ? 0xFF0000 : coeff * (rgb & 0xFF0000);
-	color |= tmp;
+	add = ((-zh) + 0.5) * 255.;
+	add == 0 ? add = 6 : 0;
+	i = -1;
+	while (++i < 3)
+	{
+		tmp = ((rgb >> (i * 8)) & 0xFF) + add;
+		tmp > 255 ? tmp = 255 : 0;
+		color += tmp << (8 * (i));
+	}
 	return (color);
 }
 
@@ -69,8 +72,7 @@ static void	actually_render(t_coords pos, t_map *map, t_data *data)
 			vert.x = ((float)pos.x - (map->size.x / 2.)) / (float)map->size.x;
 			vert.y = ((float)pos.y - (map->size.y / 2.)) / (float)map->size.y;
 			vert.z = (map->heightmap[pos.y][pos.x] - map->median) / map->delta * -1;
-
-			px.color = get_rgb(data->rgb, vert.z, map);
+			px.color = get_rgb(data->rgb, vert.z);
 			rotate(&vert, &data->rot);
 			if (vert.z < 0)
 				px.x = __INT_MAX__;

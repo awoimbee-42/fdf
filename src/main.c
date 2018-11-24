@@ -6,7 +6,7 @@
 /*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/24 01:32:08 by arthur           ###   ########.fr       */
+/*   Updated: 2018/11/24 17:17:25 by arthur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	init(t_map *map, t_data *data, t_mlx *mlx, char *filename)
 	data->map = map;
 	data->mlx = mlx;
 	data->zoom = WIN_WIDTH / 2;
-	data->rgb = 0xFFFFFF;
+	data->rgb = 0x000C00;
 	data->rot.x = 0;
 	data->rot.y = 0;
 	data->rot.z = 0;

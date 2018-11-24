@@ -6,7 +6,7 @@
 #    By: arthur <arthur@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2018/11/24 01:28:06 by arthur           ###   ########.fr        #
+#    Updated: 2018/11/24 17:19:53 by arthur           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ ifeq ($(UNAME_S),Darwin)
 else
 	LIB_X_FD = ./libs/minilibx_x11
 	FRAMWRK = -lXext -lX11
-	#"Don't forget you need libxext-dev & libx11-dev"
+	#Don't forget you need libxext-dev & libx11-dev
 endif
 
 LIB	=	$(LIB_X_FD)/libmlx.a	\
