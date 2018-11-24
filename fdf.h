@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/23 17:50:00 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/24 01:31:18 by arthur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,32 @@
 # include <unistd.h>	//read() write() close()
 # include <math.h>		//cos() sin()
 
+# ifdef __APPLE__
+#  define K_AUP 123
+#  define K_DWN 124
+#  define K_LFT 126
+#  define K_RGT 125
+#  define K_LEQ 12
+#  define K_LEE 14
+#  define K_LEW ...
+#  define K_LES ...
+#  define K_ESC ...
+# elif __linux__
+#  define K_AUP 65362
+#  define K_DWN 65364
+#  define K_LFT 65361
+#  define K_RGT 65363
+#  define K_LEQ 97
+#  define K_LEE 101
+#  define K_LEW 122
+#  define K_LES 115
+#  define K_ESC 65307
+# endif
+
 # define INT_MIN -2147483648
 # define INT_MAX 2147483647
-# define WIN_HEIGHT 1000
-# define WIN_WIDTH 1000
+# define WIN_HEIGHT 480
+# define WIN_WIDTH 480
 # define ENDIAN 0
 # define BPP 32
 # define LINE_SIZE WIDTH * 4
@@ -69,8 +91,8 @@ typedef struct	s_map
 {
 	int			**heightmap;
 	t_coords	size;
-	float		delta;
-	float		mean;
+	double		delta;
+	double		median;
 	int			min;
 	int			max;
 }				t_map;
@@ -79,7 +101,6 @@ typedef struct	s_vertices
 {
 	int			x;
 	int			y;
-	int			depth;
 	int			color;
 }				t_vertices;
 
@@ -89,7 +110,7 @@ typedef struct	s_data
 	t_map		*map;
 	t_vertices	**zbuff;
 	t_vertex	rot;
-	float		zoom;
+	double		zoom;
 	int			rgb;
 }				t_data;
 

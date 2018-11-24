@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
+#    By: arthur <arthur@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2018/11/23 18:54:57 by awoimbee         ###   ########.fr        #
+#    Updated: 2018/11/24 01:28:06 by arthur           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,11 +37,13 @@ SRC	=	src/main.c			\
 
 INCS	=	./ ./libs/ $(LIB_X_FD)
 
-CFLAGS	=	-Wall -g -O0
+CFLAGS	=	-Wall -O3 #-g3 -O0
 
 all : $(NAME)
 
-$(NAME) : $(SRC) mlx libft
+$(NAME) : $(SRC) fdf.h
+	make -C $(LIB_X_FD) all
+	make -C libs/libft/ all
 	$(CC) $(CFLAGS) $(addprefix -I,$(INCS)) $(SRC) $(LIB) -o $(NAME)
 
 mlx :

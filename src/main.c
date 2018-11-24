@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/23 20:12:49 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/24 01:32:08 by arthur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,23 +35,16 @@ int		keypress(int keycode, void *param)
 	t_data	*data;
 
 	data = (t_data*)param;
-	// yaw
-	if (keycode == 123)
-		data->rot.z += M_PI / 8.;
-	else if (keycode == 124)
-		data->rot.z -= M_PI / 8.;
-	// pitch
-	else if (keycode == 126)
-		data->rot.y += M_PI / 8.;
-	else if (keycode == 125)
-		data->rot.y -= M_PI / 8.;
-	// roll
-	else if (keycode == 12)
-		data->rot.x += M_PI / 8.;
-	else if (keycode == 14)
-		data->rot.x -= M_PI / 8.;
-
-	//fprintf(stderr, "keypressed: %d\n", keycode);
+	keycode == K_AUP ? data->rot.x += M_PI / 8. : 0;
+	keycode == K_DWN ? data->rot.x -= M_PI / 8. : 0;
+	keycode == K_LFT ? data->rot.z += M_PI / 8. : 0;
+	keycode == K_RGT ? data->rot.z -= M_PI / 8. : 0;
+	keycode == K_LEQ ? data->rot.y += M_PI / 8. : 0;
+	keycode == K_LEE ? data->rot.y -= M_PI / 8. : 0;
+	keycode == K_LEW ? data->zoom *= 1.25 : 0;
+	keycode == K_LES ? data->zoom /= 1.25 : 0;
+	keycode == K_ESC ? exit(0) : 0;
+	fprintf(stderr, "keypressed: %d\n", keycode);
 	render(data->mlx, data->map, data);
 	return (1);
 }
@@ -67,7 +60,7 @@ void	init(t_map *map, t_data *data, t_mlx *mlx, char *filename)
 	data->map = map;
 	data->mlx = mlx;
 	data->zoom = WIN_WIDTH / 2;
-	data->rgb = 0xFF0F0F;
+	data->rgb = 0xFFFFFF;
 	data->rot.x = 0;
 	data->rot.y = 0;
 	data->rot.z = 0;
@@ -94,11 +87,9 @@ int		main(int argc, char **argv)
 		msg_exit("niet.", 0);
 	init(map, data, mlx, argv[1]);
 
-	render(mlx, data->map, data); //M_PI/2
+	render(mlx, data->map, data);
 
-	//data is becoming currupted befor the keydown function is called !
-
-	mlx_key_hook (mlx->win, &keypress, &data);
+	mlx_key_hook (mlx->win, &keypress, data);
 
 	mlx_loop(mlx->ptr);
 	return (0);

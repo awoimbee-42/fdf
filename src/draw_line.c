@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   draw_line.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:26 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/23 17:53:06 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/24 01:28:18 by arthur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	draw_line_higrad(t_vertices p0, t_vertices p1, int *img)
 {
-	t_coords	delta;
+	t_coords		delta;
 	int			way_x;
 	int			error;
 
@@ -64,20 +64,14 @@ static void	draw_line_lograd(t_vertices p0, t_vertices p1, int *img)
 
 static void	draw_line(t_vertices p0, t_vertices p1, int *img)
 {
-	if(p0.x < 0 || p0.x > WIN_WIDTH || p0.y < 0 || p0.y > WIN_HEIGHT
-	|| p1.x < 0 || p1.x > WIN_WIDTH || p1.y < 0 || p1.y > WIN_HEIGHT)
-	{
-		fprintf(stderr, "FUCKYOU\t");
-		return ;
-	}
 	if (abs(p1.y - p0.y) < abs(p1.x - p0.x))
 	{
-		if (p0.x > p1.x) // line is more horizontal
+		if (p0.x > p1.x)
 			draw_line_lograd(p1, p0, img);
 		else
 			draw_line_lograd(p0, p1, img);
 	}
-	else   // line is more vertical
+	else
 	{
 		if (p0.y > p1.y)
 			draw_line_higrad(p1, p0, img);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 17:30:46 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/23 17:08:34 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/23 23:38:13 by arthur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ int				fill_map_line(char **data, t_map *map)
 	{
 		height = ft_atoi(data[data_len]);
 		map->heightmap[map->size.y][data_len] = height;
-		map->mean += height;
 		map->min = height < map->min ? height : map->min;
 		map->max = height > map->max ? height : map->max;
 		data_len++;
@@ -91,7 +90,7 @@ t_map			*actually_read(t_map *map, int fd)
 		free(line);
 		ft_free_tab(&tab);
 	}
-	map->mean /= full_len;
+	map->median = (map->min + map->max) / 2.;
 	map->delta = map->max - map->min;
 	return (map);
 }
@@ -100,7 +99,6 @@ t_map			*read_map(t_map *map, char *filename)
 {
 	int			fd;
 
-	map->mean = 0;
 	map->min = 0;
 	map->max = 0;
 	map->size.y = map_height(filename);
