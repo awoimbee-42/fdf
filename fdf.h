@@ -42,13 +42,15 @@
 #  define K_LEE 101
 #  define K_LEW 122
 #  define K_LES 115
+#  define K_LEA 9999
+#  define K_LED 9999
 #  define K_ESC 65307
 # endif
 
 # define INT_MIN -2147483648
 # define INT_MAX 2147483647
-# define WIN_HEIGHT 1024
-# define WIN_WIDTH 1280
+# define WIN_HEIGHT 400
+# define WIN_WIDTH 400
 # define ENDIAN 0
 # define BPP 32
 # define LINE_SIZE WIDTH * 4

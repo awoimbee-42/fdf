@@ -83,7 +83,7 @@ int		main(int argc, char **argv)
 	if (argc == 1)
 		usage();
 	init(map, data, mlx, argv[1]);
-	i = 0;
+	i = 1;
 	while (++i < argc)
 	{
 		if (ft_strcmp(argv[i], "-p") == 0)
@@ -95,7 +95,7 @@ int		main(int argc, char **argv)
 		else
 			usage();
 	}
-	fprintf(stderr, "0x%08.8X\n", data->rgb);
+	//fprintf(stderr, "0x%08.8X\n", data->rgb);
 	render(mlx, data->map, data);
 	mlx_hook(mlx->win, 2, 0, &keypress, data);
 	mlx_loop(mlx->ptr);
