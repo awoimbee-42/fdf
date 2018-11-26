@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/26 14:41:22 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/26 16:19:02 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ void	init(t_map *map, t_data *data, t_mlx *mlx, char *filename)
 	map->heightmap = NULL;
 	map = read_map(map, filename);
 	chaos((mlx->ptr = mlx_init()));
-	chaos((mlx->win =
-	mlx_new_window(mlx->ptr, WIN_WIDTH, WIN_HEIGHT, "Give good grade plz")));
+	data->win_height = 1024;
+	data->win_width = 1280;
 	data->map = map;
 	data->mlx = mlx;
-	data->zoom = WIN_WIDTH / 2;
+	data->zoom = data->win_width / 2;
 	data->rgb = 0xFF0000;
 	data->zh = 1.;
 	data->precisn = 8.;
@@ -60,10 +60,11 @@ void	init(t_map *map, t_data *data, t_mlx *mlx, char *filename)
 
 void	usage(void)
 {
-	msg_exit("Usage : ./fdf <filename> [-p precision] [-c color] [-z zoom]\n\
+	msg_exit("Usage : ./fdf <filename> [-p] [-c] [-z] [-res]\n\
 		\t-p precision: precision of rotation calculated as π/p, must be int\n\
 		\t-c basecolor: color in capitalized hex w/ \"0x\" (default: FF0000)\n\
-		\t-z zoom: dictate size of object, default to WIN_WIDTH / 2", 0);
+		\t-z zoom: dictate size of object, default to data->win_width / 2\n\
+		\t-res width height: resolution of window, cannot be under 10", 0);
 }
 
 int		main(int argc, char **argv)
@@ -87,15 +88,25 @@ int		main(int argc, char **argv)
 	while (++i < argc)
 	{
 		if (ft_strcmp(argv[i], "-p") == 0)
-			data->precisn = (double)ft_atoi(argv[++i]);
+			(data->precisn = (double)ft_atoi(argv[++i])) == 0 ?
+			msg_exit("p cannot be equal to 0 !", 0) : 0;
 		else if (ft_strcmp(argv[i], "-c") == 0)
 			data->rgb = ft_atoi_base(argv[++i], "0123456789ABCDEF");
 		else if (ft_strcmp(argv[i], "-z") == 0)
-			data->zoom = ft_atoi(argv[++i]);
+			(data->zoom = ft_atoi(argv[++i])) < 1 ?
+			msg_exit("zoom minimum is 1", 0) : 0;
+		else if (ft_strcmp(argv[i], "-res") == 0 && i + 2 < argc)
+		{
+			(data->win_width = ft_atoi(argv[++i])) < 10 ?
+			msg_exit("Window width too small ! (%dpx)", &data->win_width) : 0;
+			(data->win_height = ft_atoi(argv[++i])) < 10 ?
+			msg_exit("Window height too small ! (%dpx)", &data->win_height) : 0;
+		}
 		else
 			usage();
 	}
-	//fprintf(stderr, "0x%08.8X\n", data->rgb);
+	chaos((mlx->win = mlx_new_window(mlx->ptr,
+		data->win_width, data->win_height, "Give good grade plz")));
 	render(mlx, data->map, data);
 	mlx_hook(mlx->win, 2, 0, &keypress, data);
 	mlx_loop(mlx->ptr);

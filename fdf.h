@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/26 13:11:43 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/26 16:08:26 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@
 
 # define INT_MIN -2147483648
 # define INT_MAX 2147483647
-# define WIN_HEIGHT 400
-# define WIN_WIDTH 400
 # define ENDIAN 0
 # define BPP 32
 # define LINE_SIZE WIDTH * 4
@@ -118,9 +116,11 @@ typedef struct	s_data
 	double		zoom;
 	int			rgb;
 	float		zh;
+	int			win_height;
+	int			win_width;
 }				t_data;
 
-void			draw_all_lines(t_vertices **buffer, int height, int *data);
+void		draw_all_lines(t_vertices **buffer, int h, int win_w, int *imgdata);
 void			msg_exit(char *msg, void *data);
 t_map			*read_map(t_map *map, char *filename);
 void			render(t_mlx *mlx, t_map *map, t_data *data);

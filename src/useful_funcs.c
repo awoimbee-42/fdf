@@ -6,9 +6,11 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 17:47:40 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/26 12:55:00 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/26 16:22:15 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "fdf.h"
 
 /*
 **	msg_exit : a printf for crashing cleanly.
@@ -18,8 +20,6 @@
 **	When %[...] is read,
 **	 msg_exit will interpret memory as pointing to the specified datatype.
 */
-
-#include "fdf.h"
 
 void	msg_exit(char *msg, void *data)
 {
@@ -40,8 +40,8 @@ void	msg_exit(char *msg, void *data)
 				var = (char*)data;
 			else
 				msg_exit(&msg[len], data);
-			len = ft_strlen(var);
-			write(2, var, len);
+			write(2, var, ft_strlen(var));
+			msg_exit(&msg[len] + 1, 0);
 		}
 		write(2, "\n", 1);
 	}

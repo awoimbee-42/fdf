@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/23 12:00:07 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/26 12:40:39 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/26 16:10:03 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ static void	actually_render(t_coords pos, t_map *map, t_data *data)
 			px.color = get_rgb(data->rgb, vert.z / data->zh);
 			rotate(&vert, &data->rot);
 			fov = tan(1.22173047 / 2.) * data->zoom;
-			px.x = (int)((vert.x * fov) + (WIN_WIDTH / 2.));
-			px.y = (int)((vert.z * fov) + (WIN_HEIGHT / 2.));
-			if (px.y < 0 || px.y >= WIN_HEIGHT || px.x < 0 || px.x >= WIN_WIDTH)
+			px.x = (int)((vert.x * fov) + (data->win_width / 2.));
+			px.y = (int)((vert.z * fov) + (data->win_height / 2.));
+			if (px.y < 0 || px.y >= data->win_height || px.x < 0 || px.x >= data->win_width)
 				px.x = __INT_MAX__;
 			data->zbuff[pos.y][pos.x] = px;
 		}
@@ -91,12 +91,12 @@ void		render(t_mlx *mlx, t_map *map, t_data *data)
 {
 	t_coords	pos;
 
-	mlx->img.ptr = mlx_new_image(mlx->ptr, WIN_WIDTH, WIN_HEIGHT);
+	mlx->img.ptr = mlx_new_image(mlx->ptr, data->win_width, data->win_height);
 	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.ptr, &mlx->img.bpp,
 											&mlx->img.line_s, &mlx->img.endian);
 	pos.y = -1;
 	actually_render(pos, map, data);
-	draw_all_lines(data->zbuff, map->size.y, mlx->img.data);
+	draw_all_lines(data->zbuff, map->size.y, data->win_width, mlx->img.data);
 	mlx_clear_window(mlx->ptr, mlx->win);
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->img.ptr, 0, 0);
 	mlx_destroy_image(mlx->ptr, mlx->img.ptr);
