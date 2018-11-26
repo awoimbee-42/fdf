@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: arthur <arthur@student.42.fr>              +#+  +:+       +#+         #
+#    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2018/11/24 17:19:53 by arthur           ###   ########.fr        #
+#    Updated: 2018/11/26 14:45:15 by awoimbee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,7 +37,7 @@ SRC	=	src/main.c			\
 
 INCS	=	./ ./libs/ $(LIB_X_FD)
 
-CFLAGS	=	-Wall -O3 #-g3 -O0
+CFLAGS	=	-Wall -Wextra -Werror -g3 -O0
 
 all : $(NAME)
 

@@ -3,48 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
+/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/24 17:17:25 by arthur           ###   ########.fr       */
+/*   Updated: 2018/11/26 14:41:22 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
-
-void	chaos(void *fate)
-{
-	if (fate == NULL)
-		exit(EXIT_FAILURE);
-}
-
-void		normalize_to_window(t_coords *point)
-{
-	if (point->x >= WIN_WIDTH)
-		point->x = WIN_WIDTH - 1;
-	else if (point->x < 0)
-		point->x = 0;
-	if (point->y >= WIN_HEIGHT)
-		point->y = WIN_HEIGHT - 1;
-	else if (point->y < 0)
-		point->y = 0;
-}
 
 int		keypress(int keycode, void *param)
 {
 	t_data	*data;
 
 	data = (t_data*)param;
-	keycode == K_AUP ? data->rot.x += M_PI / 8. : 0;
-	keycode == K_DWN ? data->rot.x -= M_PI / 8. : 0;
-	keycode == K_LFT ? data->rot.z += M_PI / 8. : 0;
-	keycode == K_RGT ? data->rot.z -= M_PI / 8. : 0;
-	keycode == K_LEQ ? data->rot.y += M_PI / 8. : 0;
-	keycode == K_LEE ? data->rot.y -= M_PI / 8. : 0;
+	keycode == K_AUP ? data->rot.x += M_PI / data->precisn : 0;
+	keycode == K_DWN ? data->rot.x -= M_PI / data->precisn : 0;
+	keycode == K_LFT ? data->rot.z += M_PI / data->precisn : 0;
+	keycode == K_RGT ? data->rot.z -= M_PI / data->precisn : 0;
+	keycode == K_LEA ? data->rot.y += M_PI / data->precisn : 0;
+	keycode == K_LED ? data->rot.y -= M_PI / data->precisn : 0;
 	keycode == K_LEW ? data->zoom *= 1.25 : 0;
 	keycode == K_LES ? data->zoom /= 1.25 : 0;
+	keycode == K_LEQ ? data->zh /= 1.25 : 0;
+	keycode == K_LEE ? data->zh *= 1.25 : 0;
 	keycode == K_ESC ? exit(0) : 0;
-	fprintf(stderr, "keypressed: %d\n", keycode);
 	render(data->mlx, data->map, data);
 	return (1);
 }
@@ -56,14 +39,17 @@ void	init(t_map *map, t_data *data, t_mlx *mlx, char *filename)
 	map->heightmap = NULL;
 	map = read_map(map, filename);
 	chaos((mlx->ptr = mlx_init()));
-	chaos((mlx->win = mlx_new_window(mlx->ptr, WIN_WIDTH, WIN_HEIGHT, "A simple example")));
+	chaos((mlx->win =
+	mlx_new_window(mlx->ptr, WIN_WIDTH, WIN_HEIGHT, "Give good grade plz")));
 	data->map = map;
 	data->mlx = mlx;
 	data->zoom = WIN_WIDTH / 2;
-	data->rgb = 0x000C00;
-	data->rot.x = 0;
+	data->rgb = 0xFF0000;
+	data->zh = 1.;
+	data->precisn = 8.;
+	data->rot.x = M_PI / data->precisn;
 	data->rot.y = 0;
-	data->rot.z = 0;
+	data->rot.z = (M_PI * 2) / data->precisn;
 	if (!(data->zbuff = malloc((map->size.y + 1) * sizeof(t_vertices*))))
 		msg_exit("cannot allocate enough memory.", 0);
 	i = -1;
@@ -72,11 +58,20 @@ void	init(t_map *map, t_data *data, t_mlx *mlx, char *filename)
 			msg_exit("Ougabouga", 0);
 }
 
+void	usage(void)
+{
+	msg_exit("Usage : ./fdf <filename> [-p precision] [-c color] [-z zoom]\n\
+		\t-p precision: precision of rotation calculated as π/p, must be int\n\
+		\t-c basecolor: color in capitalized hex w/ \"0x\" (default: FF0000)\n\
+		\t-z zoom: dictate size of object, default to WIN_WIDTH / 2", 0);
+}
+
 int		main(int argc, char **argv)
 {
 	t_mlx	*mlx;
 	t_map	*map;
 	t_data	*data;
+	int		i;
 
 	data = NULL;
 	map = NULL;
@@ -85,12 +80,24 @@ int		main(int argc, char **argv)
 	|| !(data = malloc(sizeof(t_data)))
 	|| !(mlx = malloc(sizeof(t_mlx))))
 		msg_exit("niet.", 0);
+	if (argc == 1)
+		usage();
 	init(map, data, mlx, argv[1]);
-
+	i = 0;
+	while (++i < argc)
+	{
+		if (ft_strcmp(argv[i], "-p") == 0)
+			data->precisn = (double)ft_atoi(argv[++i]);
+		else if (ft_strcmp(argv[i], "-c") == 0)
+			data->rgb = ft_atoi_base(argv[++i], "0123456789ABCDEF");
+		else if (ft_strcmp(argv[i], "-z") == 0)
+			data->zoom = ft_atoi(argv[++i]);
+		else
+			usage();
+	}
+	fprintf(stderr, "0x%08.8X\n", data->rgb);
 	render(mlx, data->map, data);
-
-	mlx_key_hook (mlx->win, &keypress, data);
-
+	mlx_hook(mlx->win, 2, 0, &keypress, data);
 	mlx_loop(mlx->ptr);
 	return (0);
 }

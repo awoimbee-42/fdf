@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
+/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/24 01:31:18 by arthur           ###   ########.fr       */
+/*   Updated: 2018/11/26 13:11:43 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,23 @@
 # include "mlx.h"
 # include "libft/libft.h"
 # include <stdio.h>		//perror() strerror()
-# include <stdlib.h>	//exit()
-# include <fcntl.h>		//open()
-# include <unistd.h>	//read() write() close()
-# include <math.h>		//cos() sin()
+# include <stdlib.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include <math.h>
 
 # ifdef __APPLE__
-#  define K_AUP 123
-#  define K_DWN 124
-#  define K_LFT 126
-#  define K_RGT 125
+#  define K_AUP 126
+#  define K_DWN 125
+#  define K_LFT 123
+#  define K_RGT 124
 #  define K_LEQ 12
 #  define K_LEE 14
-#  define K_LEW ...
-#  define K_LES ...
-#  define K_ESC ...
+#  define K_LEW 13
+#  define K_LES 1
+#  define K_LEA 0
+#  define K_LED 2
+#  define K_ESC 53
 # elif __linux__
 #  define K_AUP 65362
 #  define K_DWN 65364
@@ -45,8 +47,8 @@
 
 # define INT_MIN -2147483648
 # define INT_MAX 2147483647
-# define WIN_HEIGHT 480
-# define WIN_WIDTH 480
+# define WIN_HEIGHT 1024
+# define WIN_WIDTH 1280
 # define ENDIAN 0
 # define BPP 32
 # define LINE_SIZE WIDTH * 4
@@ -110,14 +112,16 @@ typedef struct	s_data
 	t_map		*map;
 	t_vertices	**zbuff;
 	t_vertex	rot;
+	float		precisn;
 	double		zoom;
 	int			rgb;
+	float		zh;
 }				t_data;
 
 void			draw_all_lines(t_vertices **buffer, int height, int *data);
 void			msg_exit(char *msg, void *data);
 t_map			*read_map(t_map *map, char *filename);
 void			render(t_mlx *mlx, t_map *map, t_data *data);
-void			normalize_to_window(t_coords *point);
+void			chaos(void *fate);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_map.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
+/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 17:30:46 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/23 23:38:13 by arthur           ###   ########.fr       */
+/*   Updated: 2018/11/26 14:35:27 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int				fill_map_line(char **data, t_map *map)
 	while (data[data_len])
 	{
 		height = ft_atoi(data[data_len]);
+		if (height == 0 && *data[data_len] != '0')
+			msg_exit("Invalid file ! read : %s", data[data_len]);
 		map->heightmap[map->size.y][data_len] = height;
 		map->min = height < map->min ? height : map->min;
 		map->max = height > map->max ? height : map->max;
@@ -52,9 +54,9 @@ static size_t	map_height(char *filename)
 	while (get_next_line(fd, &line) > 0 && ++line_nb)
 		free(line);
 	if (line_nb == 0)
-		msg_exit("empty file ?", 0);
+		msg_exit("Empty file ?", 0);
 	if (close(fd) == -1)
-		msg_exit("cannot close file", NULL);
+		msg_exit("Cannot close file", NULL);
 	return (line_nb);
 }
 
@@ -90,6 +92,8 @@ t_map			*actually_read(t_map *map, int fd)
 		free(line);
 		ft_free_tab(&tab);
 	}
+	if (map->min == 0 && map->max == 0)
+		map->max = 1;
 	map->median = (map->min + map->max) / 2.;
 	map->delta = map->max - map->min;
 	return (map);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
+/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/23 12:00:07 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/24 17:10:13 by arthur           ###   ########.fr       */
+/*   Updated: 2018/11/26 12:40:39 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void		rotate(t_vertex *vert, t_vertex *rot)
 	rotate2d(&vert->x, &vert->y, rot->z);
 }
 
-int		get_rgb(int rgb, double zh)
+int			get_rgb(int rgb, double zh)
 {
 	int			color;
 	int			tmp;
@@ -66,39 +66,38 @@ static void	actually_render(t_coords pos, t_map *map, t_data *data)
 
 	while (++pos.y < map->size.y)
 	{
-		pos.x = 0;
-		while (map->heightmap[pos.y][pos.x] != INT_MIN)
+		pos.x = -1;
+		while (map->heightmap[pos.y][++pos.x] != INT_MIN)
 		{
-			vert.x = ((float)pos.x - (map->size.x / 2.)) / (float)map->size.x;
+			vert.x = ((float)pos.x - (map->size.x / 2.)) / (float)map->size.y;
 			vert.y = ((float)pos.y - (map->size.y / 2.)) / (float)map->size.y;
-			vert.z = (map->heightmap[pos.y][pos.x] - map->median) / map->delta * -1;
-			px.color = get_rgb(data->rgb, vert.z);
+			vert.z = ((map->heightmap[pos.y][pos.x] - map->median)
+				/ map->delta * -1) * data->zh;
+			px.color = get_rgb(data->rgb, vert.z / data->zh);
 			rotate(&vert, &data->rot);
-			if (vert.z < 0)
-				px.x = __INT_MAX__;
-			fov = tan(1.22173047/2) * data->zoom;
+			fov = tan(1.22173047 / 2.) * data->zoom;
 			px.x = (int)((vert.x * fov) + (WIN_WIDTH / 2.));
 			px.y = (int)((vert.z * fov) + (WIN_HEIGHT / 2.));
-			if (px.y < 0 || px.y >= WIN_HEIGHT || px.x < 0 || px.x >= WIN_HEIGHT)
+			if (px.y < 0 || px.y >= WIN_HEIGHT || px.x < 0 || px.x >= WIN_WIDTH)
 				px.x = __INT_MAX__;
 			data->zbuff[pos.y][pos.x] = px;
-			pos.x++;
 		}
 		while (pos.x <= map->size.x)
 			data->zbuff[pos.y][pos.x++].x = INT_MIN;
 	}
 }
 
-void	render(t_mlx *mlx, t_map *map, t_data *data)
+void		render(t_mlx *mlx, t_map *map, t_data *data)
 {
 	t_coords	pos;
 
 	mlx->img.ptr = mlx_new_image(mlx->ptr, WIN_WIDTH, WIN_HEIGHT);
-	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.ptr, &mlx->img.bpp, &mlx->img.line_s, &mlx->img.endian);
-
+	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.ptr, &mlx->img.bpp,
+											&mlx->img.line_s, &mlx->img.endian);
 	pos.y = -1;
 	actually_render(pos, map, data);
 	draw_all_lines(data->zbuff, map->size.y, mlx->img.data);
+	mlx_clear_window(mlx->ptr, mlx->win);
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->img.ptr, 0, 0);
-	mlx_destroy_image(mlx->ptr,  mlx->img.ptr);
+	mlx_destroy_image(mlx->ptr, mlx->img.ptr);
 }

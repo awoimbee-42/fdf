@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 17:47:40 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/21 17:51:14 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/26 12:55:00 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,10 @@ void	msg_exit(char *msg, void *data)
 	}
 	write(1, "error\n", 6);
 	exit(EXIT_FAILURE);
+}
+
+void	chaos(void *fate)
+{
+	if (fate == NULL)
+		exit(EXIT_FAILURE);
 }
