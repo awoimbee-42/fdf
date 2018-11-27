@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/27 15:51:31 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/27 17:06:41 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,43 +15,25 @@
 
 # include "mlx.h"
 # include "libft/libft.h"
-# include <stdio.h>		//perror() strerror()
 # include <stdlib.h>
 # include <fcntl.h>
 # include <unistd.h>
 # include <math.h>
 
-# ifdef __APPLE__
-#  define K_AUP 126
-#  define K_DWN 125
-#  define K_LFT 123
-#  define K_RGT 124
-#  define K_LEQ 12
-#  define K_LEE 14
-#  define K_LEW 13
-#  define K_LES 1
-#  define K_LEA 0
-#  define K_LED 2
-#  define K_ESC 53
-# elif __linux__
-#  define K_AUP 65362
-#  define K_DWN 65364
-#  define K_LFT 65361
-#  define K_RGT 65363
-#  define K_LEQ 97
-#  define K_LEE 101
-#  define K_LEW 122
-#  define K_LES 115
-#  define K_LEA 9999
-#  define K_LED 9999
-#  define K_ESC 65307
-# endif
+# define K_AUP 126
+# define K_DWN 125
+# define K_LFT 123
+# define K_RGT 124
+# define K_LEQ 12
+# define K_LEE 14
+# define K_LEW 13
+# define K_LES 1
+# define K_LEA 0
+# define K_LED 2
+# define K_ESC 53
 
 # define INT_MIN -2147483648
 # define INT_MAX 2147483647
-# define ENDIAN 0
-# define BPP 32
-# define LINE_SIZE WIDTH * 4
 
 typedef unsigned char	t_uchar;
 
@@ -85,7 +67,6 @@ typedef struct	s_vertices
 	int			color;
 }				t_vertices;
 
-
 typedef struct	s_map
 {
 	int			**heightmap;
@@ -110,7 +91,8 @@ typedef struct	s_data
 	int			win_width;
 }				t_data;
 
-void			draw_all_lines(t_vertices **buffer, int h, int win_w, int *imgdata);
+void			draw_all_lines(t_vertices **buffer,
+						int h, int win_w, int *imgdata);
 void			msg_exit(char *msg, void *data);
 t_map			*read_map(t_map *map, char *filename);
 void			render(t_mlx *mlx, t_map *map, t_data *data);

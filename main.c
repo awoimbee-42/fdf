@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/27 16:00:54 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/27 16:37:18 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,23 +67,10 @@ void	usage(void)
 		\t-res width height: resolution of window, cannot be under 10", 0);
 }
 
-int		main(int argc, char **argv)
+void	read_args(t_data *data, char **argv, int argc)
 {
-	t_mlx	*mlx;
-	t_map	*map;
-	t_data	*data;
 	int		i;
 
-	data = NULL;
-	map = NULL;
-	mlx = NULL;
-	if (!(map = malloc(sizeof(t_map)))
-	|| !(data = malloc(sizeof(t_data)))
-	|| !(mlx = malloc(sizeof(t_mlx))))
-		msg_exit("niet.", 0);
-	if (argc == 1 || argv[1][0] == '-')
-		usage();
-	init(map, data, mlx, argv[1]);
 	i = 1;
 	while (++i < argc)
 	{
@@ -105,6 +92,25 @@ int		main(int argc, char **argv)
 		else
 			usage();
 	}
+}
+
+int		main(int argc, char **argv)
+{
+	t_mlx	*mlx;
+	t_map	*map;
+	t_data	*data;
+
+	data = NULL;
+	map = NULL;
+	mlx = NULL;
+	if (!(map = malloc(sizeof(t_map)))
+	|| !(data = malloc(sizeof(t_data)))
+	|| !(mlx = malloc(sizeof(t_mlx))))
+		msg_exit("niet.", 0);
+	if (argc == 1 || argv[1][0] == '-')
+		usage();
+	init(map, data, mlx, argv[1]);
+	read_args(data, argv, argc);
 	chaos((mlx->win = mlx_new_window(mlx->ptr,
 		data->win_width, data->win_height, "Give good grade plz")));
 	render(mlx, data->map, data);

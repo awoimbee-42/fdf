@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2018/11/27 16:09:57 by awoimbee         ###   ########.fr        #
+#    Updated: 2018/11/27 17:20:47 by awoimbee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ else
 endif
 
 LIB	=	$(LIB_X_FD)/libmlx.a	\
-		libft/libft.a			\
+		libft/libft.a					\
 		-L$(LIB_X_FD)			\
 		-lm -lmlx $(FRAMWRK)
 
@@ -43,18 +43,18 @@ all : $(NAME)
 
 $(NAME) : $(SRC) fdf.h
 	make -C $(LIB_X_FD) all
-	make -C libs/libft/ all
+	make -C libft/ all
 	$(CC) $(CFLAGS) $(addprefix -I,$(INCS)) $(SRC) $(LIB) -o $(NAME)
 
 mlx :
 	make -C $(LIB_X_FD) all
 
 libft :
-	make -C libs/libft/ all
+	make -C libft/ all
 
 clean :
 	make -C $(LIB_X_FD) clean
-	make -C libft/ clean
+	make -C libft/ fclean
 
 fclean : clean
 	rm -rf $(NAME)

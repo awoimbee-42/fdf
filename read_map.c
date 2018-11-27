@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 17:30:46 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/26 14:35:27 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/27 17:05:46 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,22 +76,22 @@ void			ft_free_tab(char ***tab)
 t_map			*actually_read(t_map *map, int fd)
 {
 	char		**tab;
-	int			full_len;
 	int			len;
 	char		*line;
+	int			i;
 
-	full_len = 0;
-	while (get_next_line(fd, &line) > 0)
+	while ((i = get_next_line(fd, &line)) > 0)
 	{
 		tab = ft_strsplit(line, ' ');
 		len = fill_map_line(tab, map);
 		if (len > map->size.x)
 			map->size.x = len;
-		full_len += len;
 		++map->size.y;
 		free(line);
 		ft_free_tab(&tab);
 	}
+	if (i == -1)
+		msg_exit("Read error (malloc() or read() failed)", 0);
 	if (map->min == 0 && map->max == 0)
 		map->max = 1;
 	map->median = (map->min + map->max) / 2.;
