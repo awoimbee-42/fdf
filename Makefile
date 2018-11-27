@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2018/11/26 14:45:15 by awoimbee         ###   ########.fr        #
+#    Updated: 2018/11/27 16:09:57 by awoimbee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,28 +16,28 @@ CC = gcc
 
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
-	LIB_X_FD = ./libs/minilibx_macos
+	LIB_X_FD = ./minilibx_macos
 	FRAMWRK = -framework OpenGL -framework AppKit
 else
-	LIB_X_FD = ./libs/minilibx_x11
+	LIB_X_FD = ./minilibx_x11
 	FRAMWRK = -lXext -lX11
 	#Don't forget you need libxext-dev & libx11-dev
 endif
 
 LIB	=	$(LIB_X_FD)/libmlx.a	\
-		libs/libft/libft.a		\
+		libft/libft.a			\
 		-L$(LIB_X_FD)			\
 		-lm -lmlx $(FRAMWRK)
 
-SRC	=	src/main.c			\
-		src/draw_line.c		\
-		src/useful_funcs.c	\
-		src/read_map.c		\
-		src/render.c
+SRC	=	main.c			\
+		draw_line.c		\
+		useful_funcs.c	\
+		read_map.c		\
+		render.c
 
-INCS	=	./ ./libs/ $(LIB_X_FD)
+INCS	=	./ $(LIB_X_FD)
 
-CFLAGS	=	-Wall -Wextra -Werror -g3 -O0
+CFLAGS	=	-Wall -Wextra -Werror
 
 all : $(NAME)
 
@@ -54,7 +54,7 @@ libft :
 
 clean :
 	make -C $(LIB_X_FD) clean
-	make -C libs/libft/ clean
+	make -C libft/ clean
 
 fclean : clean
 	rm -rf $(NAME)
