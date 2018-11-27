@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/26 16:08:26 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/27 15:51:31 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,33 +71,12 @@ typedef struct	s_mlx
 	t_img		img;
 }				t_mlx;
 
-typedef struct	s_coords
-{
-	int			x;
-	int			y;
-	int			color;
-}				t_coords;
-
 typedef struct	s_vertex
 {
 	double		x;
 	double		y;
 	double		z;
 }				t_vertex;
-
-/*
-**	Each line of heightmap is terminated by INT_MIN
-*/
-
-typedef struct	s_map
-{
-	int			**heightmap;
-	t_coords	size;
-	double		delta;
-	double		median;
-	int			min;
-	int			max;
-}				t_map;
 
 typedef struct	s_vertices
 {
@@ -106,13 +85,24 @@ typedef struct	s_vertices
 	int			color;
 }				t_vertices;
 
+
+typedef struct	s_map
+{
+	int			**heightmap;
+	t_vertices	size;
+	double		delta;
+	double		median;
+	int			min;
+	int			max;
+}				t_map;
+
 typedef struct	s_data
 {
 	t_mlx		*mlx;
 	t_map		*map;
 	t_vertices	**zbuff;
 	t_vertex	rot;
-	float		precisn;
+	float		mv;
 	double		zoom;
 	int			rgb;
 	float		zh;
@@ -120,10 +110,11 @@ typedef struct	s_data
 	int			win_width;
 }				t_data;
 
-void		draw_all_lines(t_vertices **buffer, int h, int win_w, int *imgdata);
+void			draw_all_lines(t_vertices **buffer, int h, int win_w, int *imgdata);
 void			msg_exit(char *msg, void *data);
 t_map			*read_map(t_map *map, char *filename);
 void			render(t_mlx *mlx, t_map *map, t_data *data);
 void			chaos(void *fate);
+void			ft_exit(t_data *data);
 
 #endif

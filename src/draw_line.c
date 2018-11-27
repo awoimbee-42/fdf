@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:26 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/26 16:09:35 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/27 15:50:43 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	draw_line_higrad(t_vertices p0, t_vertices p1, int *img, int win_w)
 {
-	t_coords	delta;
+	t_vertices	delta;
 	int			way_x;
 	int			error;
 
@@ -40,7 +40,7 @@ static void	draw_line_higrad(t_vertices p0, t_vertices p1, int *img, int win_w)
 
 static void	draw_line_lograd(t_vertices p0, t_vertices p1, int *img, int win_w)
 {
-	t_coords	delta;
+	t_vertices	delta;
 	int			way_y;
 	int			error;
 

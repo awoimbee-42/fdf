@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/26 16:19:02 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/27 16:00:54 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int		keypress(int keycode, void *param)
 	t_data	*data;
 
 	data = (t_data*)param;
-	keycode == K_AUP ? data->rot.x += M_PI / data->precisn : 0;
-	keycode == K_DWN ? data->rot.x -= M_PI / data->precisn : 0;
-	keycode == K_LFT ? data->rot.z += M_PI / data->precisn : 0;
-	keycode == K_RGT ? data->rot.z -= M_PI / data->precisn : 0;
-	keycode == K_LEA ? data->rot.y += M_PI / data->precisn : 0;
-	keycode == K_LED ? data->rot.y -= M_PI / data->precisn : 0;
+	keycode == K_AUP ? data->rot.x += M_PI / data->mv : 0;
+	keycode == K_DWN ? data->rot.x -= M_PI / data->mv : 0;
+	keycode == K_LFT ? data->rot.z += M_PI / data->mv : 0;
+	keycode == K_RGT ? data->rot.z -= M_PI / data->mv : 0;
+	keycode == K_LEA ? data->rot.y += M_PI / data->mv : 0;
+	keycode == K_LED ? data->rot.y -= M_PI / data->mv : 0;
 	keycode == K_LEW ? data->zoom *= 1.25 : 0;
 	keycode == K_LES ? data->zoom /= 1.25 : 0;
 	keycode == K_LEQ ? data->zh /= 1.25 : 0;
@@ -46,10 +46,10 @@ void	init(t_map *map, t_data *data, t_mlx *mlx, char *filename)
 	data->zoom = data->win_width / 2;
 	data->rgb = 0xFF0000;
 	data->zh = 1.;
-	data->precisn = 8.;
-	data->rot.x = M_PI / data->precisn;
+	data->mv = 8.;
+	data->rot.x = M_PI / data->mv;
 	data->rot.y = 0;
-	data->rot.z = (M_PI * 2) / data->precisn;
+	data->rot.z = (M_PI * 2) / data->mv;
 	if (!(data->zbuff = malloc((map->size.y + 1) * sizeof(t_vertices*))))
 		msg_exit("cannot allocate enough memory.", 0);
 	i = -1;
@@ -62,7 +62,7 @@ void	usage(void)
 {
 	msg_exit("Usage : ./fdf <filename> [-p] [-c] [-z] [-res]\n\
 		\t-p precision: precision of rotation calculated as π/p, must be int\n\
-		\t-c basecolor: color in capitalized hex w/ \"0x\" (default: FF0000)\n\
+		\t-c basecolor: color in capitalized hex w/o \"0x\" (default: FF0000)\n\
 		\t-z zoom: dictate size of object, default to data->win_width / 2\n\
 		\t-res width height: resolution of window, cannot be under 10", 0);
 }
@@ -81,14 +81,14 @@ int		main(int argc, char **argv)
 	|| !(data = malloc(sizeof(t_data)))
 	|| !(mlx = malloc(sizeof(t_mlx))))
 		msg_exit("niet.", 0);
-	if (argc == 1)
+	if (argc == 1 || argv[1][0] == '-')
 		usage();
 	init(map, data, mlx, argv[1]);
 	i = 1;
 	while (++i < argc)
 	{
 		if (ft_strcmp(argv[i], "-p") == 0)
-			(data->precisn = (double)ft_atoi(argv[++i])) == 0 ?
+			(data->mv = (double)ft_atoi(argv[++i])) == 0 ?
 			msg_exit("p cannot be equal to 0 !", 0) : 0;
 		else if (ft_strcmp(argv[i], "-c") == 0)
 			data->rgb = ft_atoi_base(argv[++i], "0123456789ABCDEF");

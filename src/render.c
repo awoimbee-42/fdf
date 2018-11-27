@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/23 12:00:07 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/26 16:10:03 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/27 15:50:43 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int			get_rgb(int rgb, double zh)
 	return (color);
 }
 
-static void	actually_render(t_coords pos, t_map *map, t_data *data)
+static void	actually_render(t_vertices pos, t_map *map, t_data *data)
 {
 	double		fov;
 	t_vertex	vert;
@@ -89,7 +89,7 @@ static void	actually_render(t_coords pos, t_map *map, t_data *data)
 
 void		render(t_mlx *mlx, t_map *map, t_data *data)
 {
-	t_coords	pos;
+	t_vertices	pos;
 
 	mlx->img.ptr = mlx_new_image(mlx->ptr, data->win_width, data->win_height);
 	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.ptr, &mlx->img.bpp,

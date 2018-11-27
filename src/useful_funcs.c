@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/21 17:47:40 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/26 16:22:15 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/11/27 15:50:15 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,19 @@ void	chaos(void *fate)
 {
 	if (fate == NULL)
 		exit(EXIT_FAILURE);
+}
+
+void	ft_exit(t_data *data)
+{
+	while (--data->map->size.y != -1)
+	{
+		free(data->zbuff[data->map->size.y]);
+		free(data->map->heightmap[data->map->size.y]);
+	}
+	free(data->zbuff);
+	free(data->map->heightmap);
+	free(data->mlx);
+	free(data->map);
+	free(data);
+	exit(EXIT_SUCCESS);
 }
