@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/27 16:37:18 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/01/12 02:41:23 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,16 @@ int		keypress(int keycode, void *param)
 	t_data	*data;
 
 	data = (t_data*)param;
-	keycode == K_AUP ? data->rot.x += M_PI / data->mv : 0;
+	keycode == K_UP ? data->rot.x += M_PI / data->mv : 0;
 	keycode == K_DWN ? data->rot.x -= M_PI / data->mv : 0;
 	keycode == K_LFT ? data->rot.z += M_PI / data->mv : 0;
 	keycode == K_RGT ? data->rot.z -= M_PI / data->mv : 0;
-	keycode == K_LEA ? data->rot.y += M_PI / data->mv : 0;
-	keycode == K_LED ? data->rot.y -= M_PI / data->mv : 0;
-	keycode == K_LEW ? data->zoom *= 1.25 : 0;
-	keycode == K_LES ? data->zoom /= 1.25 : 0;
-	keycode == K_LEQ ? data->zh /= 1.25 : 0;
-	keycode == K_LEE ? data->zh *= 1.25 : 0;
+	keycode == K_A ? data->rot.y += M_PI / data->mv : 0;
+	keycode == K_D ? data->rot.y -= M_PI / data->mv : 0;
+	keycode == K_W ? data->zoom *= 1.25 : 0;
+	keycode == K_S ? data->zoom /= 1.25 : 0;
+	keycode == K_Q ? data->zh /= 1.25 : 0;
+	keycode == K_E ? data->zh *= 1.25 : 0;
 	keycode == K_ESC ? exit(0) : 0;
 	render(data->mlx, data->map, data);
 	return (1);
@@ -55,7 +55,7 @@ void	init(t_map *map, t_data *data, t_mlx *mlx, char *filename)
 	i = -1;
 	while (++i <= map->size.y)
 		if (!(data->zbuff[i] = malloc((map->size.x + 1) * sizeof(t_vertices))))
-			msg_exit("Ougabouga", 0);
+			msg_exit("Malloc failed, not enought memory", 0);
 }
 
 void	usage(void)
@@ -81,7 +81,7 @@ void	read_args(t_data *data, char **argv, int argc)
 			data->rgb = ft_atoi_base(argv[++i], "0123456789ABCDEF");
 		else if (ft_strcmp(argv[i], "-z") == 0)
 			(data->zoom = ft_atoi(argv[++i])) < 1 ?
-			msg_exit("zoom minimum is 1", 0) : 0;
+			msg_exit("minimum zoom is 1", 0) : 0;
 		else if (ft_strcmp(argv[i], "-res") == 0 && i + 2 < argc)
 		{
 			(data->win_width = ft_atoi(argv[++i])) < 10 ?
@@ -106,7 +106,7 @@ int		main(int argc, char **argv)
 	if (!(map = malloc(sizeof(t_map)))
 	|| !(data = malloc(sizeof(t_data)))
 	|| !(mlx = malloc(sizeof(t_mlx))))
-		msg_exit("niet.", 0);
+		msg_exit("niet. malloc failed", 0);
 	if (argc == 1 || argv[1][0] == '-')
 		usage();
 	init(map, data, mlx, argv[1]);
@@ -114,7 +114,7 @@ int		main(int argc, char **argv)
 	chaos((mlx->win = mlx_new_window(mlx->ptr,
 		data->win_width, data->win_height, "Give good grade plz")));
 	render(mlx, data->map, data);
-	mlx_hook(mlx->win, 2, 0, &keypress, data);
+	mlx_hook(mlx->win, 2, 1L, &keypress, data);
 	mlx_loop(mlx->ptr);
 	return (0);
 }
