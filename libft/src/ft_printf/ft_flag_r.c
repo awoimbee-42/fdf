@@ -1,24 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_flag_r.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/23 01:07:01 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/06 15:14:13 by awoimbee         ###   ########.fr       */
+/*   Created: 2018/12/14 15:17:25 by allespag          #+#    #+#             */
+/*   Updated: 2018/12/16 20:38:37 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_printf.h"
 
-void	ft_bzero(void *s, size_t n)
+void	prtf__flag_r(t_string *ret, int fd)
 {
-	char	*ptr;
+	int		end;
+	char	*line;
 
-	ptr = (char *)s;
-	while (n-- > 0)
+	end = 1;
+	ret->str = NULL;
+	line = NULL;
+	while ((end = get_next_line(fd, &line)))
 	{
-		ptr[n] = '\0';
+		if (end == -1)
+			prtf__msg_exit("failure while reading file.");
+		ft_strcat_join(&ret->str, line);
+		ret->len = ft_strlen(ret->str);
+		ret->str[ret->len] = '\n';
+		ret->str[ret->len + 1] = '\0';
+		free(line);
 	}
+	ret->len = ft_strlen(ret->str);
 }

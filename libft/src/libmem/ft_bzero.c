@@ -1,26 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memccpy.c                                       :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/10/23 01:22:21 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/06 15:14:27 by awoimbee         ###   ########.fr       */
+/*   Created: 2018/10/23 01:07:01 by awoimbee          #+#    #+#             */
+/*   Updated: 2019/01/07 00:02:22 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memccpy(void *dst, const void *src, int c, size_t n)
+void	ft_bzero(void *s, size_t n)
 {
-	unsigned char *d;
+	char	*ptr;
 
-	d = (unsigned char *)dst;
-	while (n-- != 0)
+	ptr = (char *)s;
+	while (n > sizeof(long long))
 	{
-		if ((*d++ = *((unsigned char *)src++)) == (unsigned char)c)
-			return ((void *)d);
+		n -= sizeof(long long);
+		*(unsigned long long*)(ptr + n) = 0;
 	}
-	return (NULL);
+	while (n > sizeof(short))
+	{
+		n -= sizeof(short);
+		*(unsigned short*)(ptr + n) = 0;
+	}
+	if (n > 0)
+	{
+		--n;
+		ptr[n] = '\0';
+	}
 }

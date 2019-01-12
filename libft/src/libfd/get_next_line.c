@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
+/*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 13:36:47 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/21 12:26:35 by awoimbee         ###   ########.fr       */
+/*   Updated: 2018/12/16 17:17:06 by arthur           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "libft.h"
+#include <sys/types.h>
+#include <sys/uio.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 char	*ft_realloc(char *old_str, size_t addsize)
 {
@@ -38,7 +42,7 @@ void	shift_arr_left(t_list *link, size_t i)
 		((char *)(link->content + 4))[l] = ((char *)(link->content + 4))[l + i];
 		++l;
 	}
-	while (l < BUFF_SIZE)
+	while (l < GNL_BUFF_SIZE)
 		((char *)(link->content + 4))[l++] = '\0';
 	return ;
 }
@@ -90,11 +94,11 @@ t_list	*check_lst(t_list **lst, const int fd)
 			link = link->next;
 		}
 	}
-	if (!(buff = malloc(BUFF_SIZE + sizeof(int))))
+	if (!(buff = malloc(GNL_BUFF_SIZE + sizeof(int))))
 		return (NULL);
-	ft_memset(buff, 0, BUFF_SIZE + 4);
+	ft_memset(buff, 0, GNL_BUFF_SIZE + 4);
 	ft_memcpy(buff, &fd, sizeof(fd));
-	if (!(link = ft_lst_push_back(lst, buff, BUFF_SIZE + 4)))
+	if (!(link = ft_lst_push_back(lst, buff, GNL_BUFF_SIZE + 4)))
 		return (NULL);
 	link->content_size = 0;
 	free(buff);
@@ -121,7 +125,7 @@ int		get_next_line(const int fd, char **line)
 	i = read_buff(link, line);
 	if (i != 0)
 		return (i);
-	while ((cread = read(fd, link->content + 4, BUFF_SIZE)) > 0)
+	while ((cread = read(fd, link->content + 4, GNL_BUFF_SIZE)) > 0)
 	{
 		link->content_size = cread;
 		i = read_buff(link, line);

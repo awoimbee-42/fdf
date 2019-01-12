@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 17:30:46 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/27 17:05:46 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/01/12 18:38:34 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,11 @@ t_map			*read_map(t_map *map, char *filename)
 	map->min = 0;
 	map->max = 0;
 	map->size.y = map_height(filename);
-	map->heightmap = malloc(map->size.y * sizeof(int*));
+	if (!map->heightmap = malloc(map->size.y * sizeof(int*)))
+		msg_exit("Not enought memory.", 0);
 	if (!(fd = open(filename, O_RDONLY)))
 		msg_exit("Cannot open file \"%s\"", filename);
 	map->size.y = 0;
 	return (actually_read(map, fd));
 }
+
