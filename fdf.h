@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/01/12 02:36:03 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/04/08 22:19:17 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ typedef struct	s_mlx
 
 typedef struct	s_vertex
 {
-	double		x;
-	double		y;
-	double		z;
+	float		x;
+	float		y;
+	float		z;
 }				t_vertex;
 
 typedef struct	s_vertices
@@ -88,8 +88,8 @@ typedef struct	s_map
 {
 	int			**heightmap;
 	t_vertices	size;
-	double		delta;
-	double		median;
+	float		delta;
+	float		median;
 	int			min;
 	int			max;
 }				t_map;
@@ -101,7 +101,7 @@ typedef struct	s_data
 	t_vertices	**zbuff;
 	t_vertex	rot;
 	float		mv;
-	double		zoom;
+	float		zoom;
 	int			rgb;
 	float		zh;
 	int			win_height;
@@ -110,7 +110,6 @@ typedef struct	s_data
 
 void			draw_all_lines(t_vertices **buffer,
 						int h, int win_w, int *imgdata);
-void			msg_exit(char *msg, void *data);
 t_map			*read_map(t_map *map, char *filename);
 void			render(t_mlx *mlx, t_map *map, t_data *data);
 void			chaos(void *fate);

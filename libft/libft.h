@@ -6,15 +6,18 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/23 20:34:49 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/01/02 00:52:10 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/03/20 01:33:13 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 # include <string.h>
+# include <stdint.h>
+# include <inttypes.h>
 
 # define GNL_BUFF_SIZE 300
+# define GNL_FLUSH (char**)INTPTR_MAX
 
 typedef struct	s_list
 {
@@ -36,6 +39,9 @@ int				ft_memcmp(const void *s1, const void *s2, size_t n);
 void			*ft_memalloc(size_t size);
 void			ft_memdel(void **ap);
 void			*ft_mempcpy(void *dst, const void *src, size_t n);
+void			ft_mem64set(uint64_t *mem, uint64_t data, size_t memlen);
+void			ft_mem32set(uint32_t *mem, uint32_t data, size_t memlen);
+void			ft_mem16set(uint16_t *mem, uint16_t data, size_t memlen);
 
 /*
 **	LIBSTR
@@ -81,6 +87,9 @@ char			*ft_itoa(int n);
 int				ft_atoi_base(char *str, char *base);
 char			*ft_itoa_base(int value, int base);
 int				ft_abs(int i);
+double			ft_atof(const char *nptr);
+double			ft_atof_mv(char **nptr);
+int				ft_atoi_mv(char **nptr);
 
 /*
 **	LIBCHAR
@@ -126,5 +135,7 @@ int				ft_lst_free_link(t_list **lst, t_list *link);
 int				ft_printf(const char *restrict format, ...);
 int				ft_fprintf(int fd, const char *restrict format, ...);
 int				ft_sprintf(char *str, const char *restrict format, ...);
+
+void			msg_exit(const char *msg, const void *data);
 
 #endif

@@ -6,38 +6,58 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/23 22:59:38 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/01/07 00:02:41 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/02/21 17:13:37 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <inttypes.h>
 
-void	*ft_memmove(void *dst, const void *src, size_t len)
+static void	rev_memcpy(void *d, const void *s, size_t len)
 {
-	unsigned char		*d;
-	const unsigned char	*s;
-
-	d = (unsigned char *)dst;
-	s = (const unsigned char *)src;
-	if (src > dst)
-		(void)ft_mempcpy(dst, src, len);
-	else if (src < dst)
+	while (len >= sizeof(uint64_t))
 	{
-		while (len >= sizeof(unsigned long long))
-		{
-			len -= sizeof(unsigned long long);
-			*(unsigned long long*)(d + len) = *(const unsigned long long*)(s + len);
-		}
-		while (len >= sizeof(unsigned short))
-		{
-			len -= sizeof(unsigned short);
-			*(unsigned short*)(d + len) = *(const unsigned short*)(s + len);
-		}
-		if (len > 0)
-		{
-			--len;
-			((unsigned char*)d)[len] = ((const unsigned char*)s)[len];
-		}
+		len -= sizeof(uint64_t);
+		*(uint64_t*)(d + len) =
+			*(const uint64_t*)(s + len);
 	}
+	while (len >= sizeof(uint16_t))
+	{
+		len -= sizeof(uint16_t);
+		*(uint16_t*)(d + len) = *(const uint16_t*)(s + len);
+	}
+	if (len > 0)
+	{
+		--len;
+		((uint8_t*)d)[len] = ((const uint8_t*)s)[len];
+	}
+}
+
+static void	std_memcpy(void *restrict dst, const void *restrict src, size_t n)
+{
+	while (n >= sizeof(uint64_t))
+	{
+		*(uint64_t*)dst = *(uint64_t *)src;
+		dst += sizeof(uint64_t);
+		src += sizeof(uint64_t);
+		n -= sizeof(uint64_t);
+	}
+	while (n >= sizeof(uint32_t))
+	{
+		*(uint32_t*)dst = *(uint32_t*)src;
+		dst += sizeof(uint32_t);
+		src += sizeof(uint32_t);
+		n -= sizeof(uint32_t);
+	}
+	while (n-- > 0)
+		*(unsigned char*)dst++ = *((unsigned char *)src++);
+}
+
+void		*ft_memmove(void *dst, const void *src, size_t len)
+{
+	if (src > dst)
+		std_memcpy(dst, src, len);
+	else if (src < dst)
+		rev_memcpy(dst, src, len);
 	return (dst);
 }

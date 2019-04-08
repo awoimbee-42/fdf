@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: arthur <arthur@student.42.fr>              +#+  +:+       +#+        */
+/*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/12 13:36:47 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/12/16 17:17:06 by arthur           ###   ########.fr       */
+/*   Updated: 2019/04/06 04:53:42 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-char	*ft_realloc(char *old_str, size_t addsize)
+static char		*ft_realloc(char *old_str, size_t addsize)
 {
 	char		*nw_str;
 	size_t		old_size;
@@ -32,7 +32,7 @@ char	*ft_realloc(char *old_str, size_t addsize)
 	return (nw_str);
 }
 
-void	shift_arr_left(t_list *link, size_t i)
+static void		shift_arr_left(t_list *link, size_t i)
 {
 	size_t		l;
 
@@ -47,11 +47,13 @@ void	shift_arr_left(t_list *link, size_t i)
 	return ;
 }
 
-int		read_buff(t_list *link, char **line)
+static int		read_buff(t_list *link, char **line)
 {
 	size_t		i;
 	void		*str;
 
+	if (*(char*)(link->content + 4) == 0 && link->content_size == GNL_BUFF_SIZE)
+		return (-1);
 	if (*(char*)(link->content + 4) == 0)
 		return (0);
 	if ((str = ft_memchr(link->content + 4, '\n', link->content_size)) != NULL)
@@ -80,7 +82,7 @@ int		read_buff(t_list *link, char **line)
 **     the other BUFFER SIZE bytes are reserved for the actual buffer
 */
 
-t_list	*check_lst(t_list **lst, const int fd)
+static t_list	*check_lst(t_list **lst, const int fd)
 {
 	t_list		*link;
 	char		*buff;
@@ -94,9 +96,8 @@ t_list	*check_lst(t_list **lst, const int fd)
 			link = link->next;
 		}
 	}
-	if (!(buff = malloc(GNL_BUFF_SIZE + sizeof(int))))
+	if (!(buff = ft_memalloc(GNL_BUFF_SIZE + sizeof(int))))
 		return (NULL);
-	ft_memset(buff, 0, GNL_BUFF_SIZE + 4);
 	ft_memcpy(buff, &fd, sizeof(fd));
 	if (!(link = ft_lst_push_back(lst, buff, GNL_BUFF_SIZE + 4)))
 		return (NULL);
@@ -105,25 +106,20 @@ t_list	*check_lst(t_list **lst, const int fd)
 	return (link);
 }
 
-/*
-** link and link->content are not cleared after everything is done.
-** This will be changed later.
-*/
-
-int		get_next_line(const int fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
 	static t_list	*lst;
 	t_list			*link;
 	int				i;
 	ssize_t			cread;
 
-	if (!line)
+
+	if (!line || (link = check_lst(&lst, fd)) == NULL)
 		return (-1);
+	if (line == GNL_FLUSH)
+		return(ft_lst_free_link(&lst, link));
 	*line = NULL;
-	if ((link = check_lst(&lst, fd)) == NULL)
-		return (-1);
-	i = read_buff(link, line);
-	if (i != 0)
+	if ((i = read_buff(link, line)) != 0)
 		return (i);
 	while ((cread = read(fd, link->content + 4, GNL_BUFF_SIZE)) > 0)
 	{
@@ -132,7 +128,7 @@ int		get_next_line(const int fd, char **line)
 		if (i != 0)
 			return (i);
 	}
-	if (cread != -1 && *line && ft_strlen(*line) != 0)
+	if (cread > 0 || (*line && **line))
 		return (1);
 	ft_lst_free_link(&lst, link);
 	return (cread);

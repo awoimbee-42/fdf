@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/01/12 02:41:23 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/04/08 22:24:50 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	read_args(t_data *data, char **argv, int argc)
 	while (++i < argc)
 	{
 		if (ft_strcmp(argv[i], "-p") == 0)
-			(data->mv = (double)ft_atoi(argv[++i])) == 0 ?
+			(data->mv = (float)ft_atoi(argv[++i])) == 0 ?
 			msg_exit("p cannot be equal to 0 !", 0) : 0;
 		else if (ft_strcmp(argv[i], "-c") == 0)
 			data->rgb = ft_atoi_base(argv[++i], "0123456789ABCDEF");
@@ -100,6 +100,7 @@ int		main(int argc, char **argv)
 	t_map	*map;
 	t_data	*data;
 
+	free(malloc(4000000 * 4));
 	data = NULL;
 	map = NULL;
 	mlx = NULL;

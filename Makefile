@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2019/01/12 18:34:17 by awoimbee         ###   ########.fr        #
+#    Updated: 2019/02/09 02:41:04 by awoimbee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC = gcc
 
 ECHO = @printf
 
-CFLAGS	=	-Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror -Ofast
 
 SRC_PATH =	src
 OBJ_PATH =	obj

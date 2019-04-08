@@ -6,25 +6,23 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/23 12:00:07 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/27 16:40:07 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/04/08 22:16:58 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static void	rotate2d(double *c0, double *c1, double theta)
+static void	rotate2d(float *c0, float *c1, float theta)
 {
-	double	cos_;
-	double	sin_;
-	double	dbl0;
-	double	dbl1;
+	float	cos_;
+	float	sin_;
+	float	dbl0;
 
 	cos_ = cos(theta);
 	sin_ = sin(theta);
 	dbl0 = *c0;
-	dbl1 = *c1;
-	*c0 = dbl0 * cos_ - dbl1 * sin_;
-	*c1 = dbl1 * cos_ + dbl0 * sin_;
+	*c0 = dbl0 * cos_ - *c1 * sin_;
+	*c1 = *c1 * cos_ + dbl0 * sin_;
 }
 
 /*
@@ -38,7 +36,7 @@ void		rotate(t_vertex *vert, t_vertex *rot)
 	rotate2d(&vert->x, &vert->y, rot->z);
 }
 
-int			get_rgb(int rgb, double zh)
+int			get_rgb(int rgb, float zh)
 {
 	int			color;
 	int			tmp;
@@ -58,7 +56,7 @@ int			get_rgb(int rgb, double zh)
 	return (color);
 }
 
-static void	do_render(t_vertices pos, t_map *map, t_data *data, double fov)
+static void	do_render(t_vertices pos, t_map *map, t_data *data, float fov)
 {
 	t_vertex	vert;
 	t_vertices	px;
@@ -89,7 +87,7 @@ static void	do_render(t_vertices pos, t_map *map, t_data *data, double fov)
 void		render(t_mlx *mlx, t_map *map, t_data *data)
 {
 	t_vertices	pos;
-	double		fov;
+	float		fov;
 
 	mlx->img.ptr = mlx_new_image(mlx->ptr, data->win_width, data->win_height);
 	mlx->img.data = (int *)mlx_get_data_addr(mlx->img.ptr, &mlx->img.bpp,
