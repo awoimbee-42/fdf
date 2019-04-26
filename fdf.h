@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/08 22:19:17 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/04/26 19:34:57 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,10 @@ typedef struct	s_map
 
 typedef struct	s_data
 {
-	t_mlx		*mlx;
-	t_map		*map;
+	t_mlx		mlx;
+	t_map		map;
 	t_vertices	**zbuff;
+	t_vec4		rot_mat[4] __attribute__((aligned(16)));
 	t_vertex	rot;
 	float		mv;
 	float		zoom;

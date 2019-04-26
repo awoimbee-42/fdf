@@ -1,32 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   useful_funcs.c                                     :+:      :+:    :+:   */
+/*   ft_lstdel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/21 17:47:40 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/26 19:48:16 by awoimbee         ###   ########.fr       */
+/*   Created: 2018/10/28 14:55:47 by awoimbee          #+#    #+#             */
+/*   Updated: 2019/04/11 14:52:38 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include <stdlib.h>
+#include "libft.h"
 
-void	chaos(void *fate)
+void	ft_lstdel(t_list **alst, void (*del)(t_listed*, size_t))
 {
-	if (fate == NULL)
-		exit(EXIT_FAILURE);
-}
+	t_list	*next;
 
-void	ft_exit(t_data *data)
-{
-	while (--data->map.size.y != -1)
+	while ((next = (*alst)->next))
 	{
-		free(data->zbuff[data->map.size.y]);
-		free(data->map.heightmap[data->map.size.y]);
+		ft_lstdelone(&*alst, del);
+		free(*alst);
+		*alst = next;
 	}
-	free(data->zbuff);
-	free(data->map.heightmap);
-	free(data);
-	exit(EXIT_SUCCESS);
+	ft_lstdelone(&*alst, del);
+	free(*alst);
+	*alst = NULL;
 }

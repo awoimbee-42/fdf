@@ -6,7 +6,7 @@
 #    By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/20 15:47:41 by awoimbee          #+#    #+#              #
-#    Updated: 2019/02/09 02:41:04 by awoimbee         ###   ########.fr        #
+#    Updated: 2019/04/26 17:23:13 by awoimbee         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC = gcc
 
 ECHO = @printf
 
-CFLAGS	=	-Wall -Wextra -Werror -Ofast
+CFLAGS	=	-Wall -Wextra -Werror  -Ofast -march=native -fno-builtin -ftree-vectorize -fstrict-aliasing
 
 SRC_PATH =	src
 OBJ_PATH =	obj
@@ -63,7 +63,7 @@ $(LIBX_FD)/libmlx.a :
 
 $(NAME) : $(LIBS) $(OBJ)
 	$(ECHO) "$(RED)Linking $(NAME)...$(EOC)\n"
-	$(CC) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CC) $^ -o $@ $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	$(ECHO) "$(GRN)Making $@ with \"$(CFLAGS) $(CPPFLAGS)\"...$(EOC)\n"

@@ -1,32 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   useful_funcs.c                                     :+:      :+:    :+:   */
+/*   isempty.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/21 17:47:40 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/26 19:48:16 by awoimbee         ###   ########.fr       */
+/*   Created: 2019/04/11 14:57:27 by awoimbee          #+#    #+#             */
+/*   Updated: 2019/04/11 15:07:06 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "libft.h"
 
-void	chaos(void *fate)
+int			que_isempty(const t_queue *que)
 {
-	if (fate == NULL)
-		exit(EXIT_FAILURE);
-}
-
-void	ft_exit(t_data *data)
-{
-	while (--data->map.size.y != -1)
-	{
-		free(data->zbuff[data->map.size.y]);
-		free(data->map.heightmap[data->map.size.y]);
-	}
-	free(data->zbuff);
-	free(data->map.heightmap);
-	free(data);
-	exit(EXIT_SUCCESS);
+	if (que->start == -1)
+		return (1);
+	return (0);
 }

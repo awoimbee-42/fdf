@@ -1,32 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   useful_funcs.c                                     :+:      :+:    :+:   */
+/*   newa.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/21 17:47:40 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/26 19:48:16 by awoimbee         ###   ########.fr       */
+/*   Created: 2019/04/19 12:07:38 by awoimbee          #+#    #+#             */
+/*   Updated: 2019/04/19 12:14:02 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "libft.h"
 
-void	chaos(void *fate)
+t_vec4		vec4_newa(const float f[4])
 {
-	if (fate == NULL)
-		exit(EXIT_FAILURE);
+	return ((t_vec4)_mm_load_ps(f));
 }
 
-void	ft_exit(t_data *data)
+/*
+**	This is just here to make creating vec4 from flt3 easier
+*/
+
+t_vec4		vec4_newa3(const float f[3], float w)
 {
-	while (--data->map.size.y != -1)
-	{
-		free(data->zbuff[data->map.size.y]);
-		free(data->map.heightmap[data->map.size.y]);
-	}
-	free(data->zbuff);
-	free(data->map.heightmap);
-	free(data);
-	exit(EXIT_SUCCESS);
+	return (vec4_newv(f[0], f[1], f[2], w));
 }

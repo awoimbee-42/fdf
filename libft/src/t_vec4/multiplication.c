@@ -1,35 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lst_push_back.c                                 :+:      :+:    :+:   */
+/*   multiplication.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/04 02:37:22 by awoimbee          #+#    #+#             */
-/*   Updated: 2018/11/15 12:02:19 by awoimbee         ###   ########.fr       */
+/*   Created: 2019/04/13 03:32:58 by awoimbee          #+#    #+#             */
+/*   Updated: 2019/04/13 03:54:54 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list		*ft_lst_push_back(t_list **lst, void *content, size_t content_size)
+t_vec4		vec4_mul(const t_vec4 a, const t_vec4 b)
 {
-	t_list		*tmp;
+	return ((t_vec4)_mm_mul_ps(a.sse, b.sse));
+}
 
-	if (*lst)
-	{
-		tmp = *lst;
-		while (tmp->next)
-			tmp = tmp->next;
-		if (!(tmp->next = ft_lstnew(content, content_size)))
-			return (NULL);
-		tmp = tmp->next;
-	}
-	else
-	{
-		if (!(*lst = ft_lstnew(content, content_size)))
-			return (NULL);
-		tmp = *lst;
-	}
-	return (tmp);
+t_vec4		vec4_mulf(const t_vec4 a, const float b)
+{
+	return ((t_vec4)_mm_mul_ps(a.sse, vec4_newf(b).sse));
+}
+
+t_vec4		vec4_div(const t_vec4 a, const t_vec4 b)
+{
+	return ((t_vec4)_mm_div_ps(a.sse, b.sse));
+}
+
+t_vec4		vec4_divf(const t_vec4 a, const float b)
+{
+	return ((t_vec4)_mm_div_ps(a.sse, vec4_newf(b).sse));
 }

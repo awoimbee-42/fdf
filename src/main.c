@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/08 22:24:50 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/04/26 19:47:36 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,33 +28,31 @@ int		keypress(int keycode, void *param)
 	keycode == K_Q ? data->zh /= 1.25 : 0;
 	keycode == K_E ? data->zh *= 1.25 : 0;
 	keycode == K_ESC ? exit(0) : 0;
-	render(data->mlx, data->map, data);
 	return (1);
 }
 
-void	init(t_map *map, t_data *data, t_mlx *mlx, char *filename)
+void	init(t_data *dat, char *filename)
 {
 	int		i;
 
-	map->heightmap = NULL;
-	map = read_map(map, filename);
-	chaos((mlx->ptr = mlx_init()));
-	data->win_height = 1024;
-	data->win_width = 1280;
-	data->map = map;
-	data->mlx = mlx;
-	data->zoom = data->win_width / 2;
-	data->rgb = 0xFF0000;
-	data->zh = 1.;
-	data->mv = 8.;
-	data->rot.x = M_PI / data->mv;
-	data->rot.y = 0;
-	data->rot.z = (M_PI * 2) / data->mv;
-	if (!(data->zbuff = malloc((map->size.y + 1) * sizeof(t_vertices*))))
+	dat->map.heightmap = NULL;
+	read_map(&dat->map, filename);
+	chaos((dat->mlx.ptr = mlx_init()));
+	dat->win_height = 1024;
+	dat->win_width = 1280;
+	dat->zoom = dat->win_width / 2;
+	dat->rgb = 0xFF0000;
+	dat->zh = 1.;
+	dat->mv = 8.;
+	dat->rot.x = M_PI / dat->mv;
+	dat->rot.y = 0;
+	dat->rot.z = (M_PI * 2) / dat->mv;
+	if (!(dat->zbuff = malloc((dat->map.size.y + 1) * sizeof(t_vertices*))))
 		msg_exit("cannot allocate enough memory.", 0);
 	i = -1;
-	while (++i <= map->size.y)
-		if (!(data->zbuff[i] = malloc((map->size.x + 1) * sizeof(t_vertices))))
+	while (++i <= dat->map.size.y)
+		if (!(dat->zbuff[i] = malloc((dat->map.size.x + 1)
+					* sizeof(t_vertices))))
 			msg_exit("Malloc failed, not enought memory", 0);
 }
 
@@ -94,28 +92,28 @@ void	read_args(t_data *data, char **argv, int argc)
 	}
 }
 
+int		exec_render(t_data *d)
+{
+	render(&d->mlx, &d->map, d);
+	return (0);
+}
+
 int		main(int argc, char **argv)
 {
-	t_mlx	*mlx;
-	t_map	*map;
 	t_data	*data;
 
 	free(malloc(4000000 * 4));
-	data = NULL;
-	map = NULL;
-	mlx = NULL;
-	if (!(map = malloc(sizeof(t_map)))
-	|| !(data = malloc(sizeof(t_data)))
-	|| !(mlx = malloc(sizeof(t_mlx))))
+	if (!(data = ft_memalloc(sizeof(t_data))))
 		msg_exit("niet. malloc failed", 0);
 	if (argc == 1 || argv[1][0] == '-')
 		usage();
-	init(map, data, mlx, argv[1]);
+	init(data, argv[1]);
 	read_args(data, argv, argc);
-	chaos((mlx->win = mlx_new_window(mlx->ptr,
+	chaos((data->mlx.win = mlx_new_window(data->mlx.ptr,
 		data->win_width, data->win_height, "Give good grade plz")));
-	render(mlx, data->map, data);
-	mlx_hook(mlx->win, 2, 1L, &keypress, data);
-	mlx_loop(mlx->ptr);
+	render(&data->mlx, &data->map, data);
+	mlx_hook(data->mlx.win, 2, 1L, &keypress, data);
+	mlx_loop_hook(data->mlx.ptr, &exec_render, data);
+	mlx_loop(data->mlx.ptr);
 	return (0);
 }

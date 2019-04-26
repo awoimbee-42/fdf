@@ -1,32 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   useful_funcs.c                                     :+:      :+:    :+:   */
+/*   ft_lst_push_back.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/11/21 17:47:40 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/26 19:48:16 by awoimbee         ###   ########.fr       */
+/*   Created: 2018/11/04 02:37:22 by awoimbee          #+#    #+#             */
+/*   Updated: 2019/04/11 14:51:16 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "libft.h"
 
-void	chaos(void *fate)
+t_list		*ft_lst_push_back(t_list **lst, t_listed *data, size_t d_size)
 {
-	if (fate == NULL)
-		exit(EXIT_FAILURE);
-}
+	t_list		*tmp;
 
-void	ft_exit(t_data *data)
-{
-	while (--data->map.size.y != -1)
+	if (*lst)
 	{
-		free(data->zbuff[data->map.size.y]);
-		free(data->map.heightmap[data->map.size.y]);
+		tmp = *lst;
+		while (tmp->next)
+			tmp = tmp->next;
+		if (!(tmp->next = ft_lstnew(data, d_size)))
+			return (NULL);
+		tmp = tmp->next;
 	}
-	free(data->zbuff);
-	free(data->map.heightmap);
-	free(data);
-	exit(EXIT_SUCCESS);
+	else
+	{
+		if (!(*lst = ft_lstnew(data, d_size)))
+			return (NULL);
+		tmp = *lst;
+	}
+	return (tmp);
 }
