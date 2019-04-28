@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/26 19:47:36 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/04/28 23:34:53 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,14 @@ void	init(t_data *dat, char *filename)
 	dat->rot.x = M_PI / dat->mv;
 	dat->rot.y = 0;
 	dat->rot.z = (M_PI * 2) / dat->mv;
-	if (!(dat->zbuff = malloc((dat->map.size.y + 1) * sizeof(t_vertices*))))
+
+
+	if (!(dat->zbuff = malloc((dat->map.size.y + 1) * sizeof(t_vertices*)))
+		|| !(dat->zbuff[0] = malloc((dat->map.size.y + 1) * (dat->map.size.x + 1) * sizeof(t_vertices))))
 		msg_exit("cannot allocate enough memory.", 0);
 	i = -1;
 	while (++i <= dat->map.size.y)
-		if (!(dat->zbuff[i] = malloc((dat->map.size.x + 1)
-					* sizeof(t_vertices))))
-			msg_exit("Malloc failed, not enought memory", 0);
+		dat->zbuff[i] = &dat->zbuff[0][i * (dat->map.size.x + 1)];
 }
 
 void	usage(void)
@@ -102,7 +103,6 @@ int		main(int argc, char **argv)
 {
 	t_data	*data;
 
-	free(malloc(4000000 * 4));
 	if (!(data = ft_memalloc(sizeof(t_data))))
 		msg_exit("niet. malloc failed", 0);
 	if (argc == 1 || argv[1][0] == '-')
