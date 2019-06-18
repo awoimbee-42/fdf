@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:31 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/28 23:34:53 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/06/18 23:52:32 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,7 @@ void	init(t_data *dat, char *filename)
 	dat->rot.x = M_PI / dat->mv;
 	dat->rot.y = 0;
 	dat->rot.z = (M_PI * 2) / dat->mv;
-
-
+	dat->fov = tan(1.22173047 / 2.);
 	if (!(dat->zbuff = malloc((dat->map.size.y + 1) * sizeof(t_vertices*)))
 		|| !(dat->zbuff[0] = malloc((dat->map.size.y + 1) * (dat->map.size.x + 1) * sizeof(t_vertices))))
 		msg_exit("cannot allocate enough memory.", 0);
@@ -114,6 +113,7 @@ int		main(int argc, char **argv)
 	render(&data->mlx, &data->map, data);
 	mlx_hook(data->mlx.win, 2, 1L, &keypress, data);
 	mlx_loop_hook(data->mlx.ptr, &exec_render, data);
+	mlx_hook(data->mlx.ptr, 17, 0, (void*)exit, 0);
 	mlx_loop(data->mlx.ptr);
 	return (0);
 }

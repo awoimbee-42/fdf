@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:34 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/26 19:34:57 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/06/18 23:29:55 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,8 @@
 #  define K_ESC 65307
 # endif
 
-
-
-
-# define INT_MIN -2147483648
-# define INT_MAX 2147483647
+# define PX_END_OF_LINE	((uint16_t)-1)
+# define PX_OUTSIDE		((uint16_t)-2)
 
 typedef unsigned char	t_uchar;
 
@@ -79,8 +76,8 @@ typedef struct	s_vertex
 
 typedef struct	s_vertices
 {
-	int			x;
-	int			y;
+	uint16_t	x;
+	uint16_t	y;
 	int			color;
 }				t_vertices;
 
@@ -93,6 +90,11 @@ typedef struct	s_map
 	int			min;
 	int			max;
 }				t_map;
+
+
+/*
+**	fov doesn't really contains the fov but tan(fov / 2)
+*/
 
 typedef struct	s_data
 {
@@ -107,6 +109,7 @@ typedef struct	s_data
 	float		zh;
 	int			win_height;
 	int			win_width;
+	float		fov;
 }				t_data;
 
 void			draw_all_lines(t_vertices **buffer,

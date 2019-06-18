@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 17:30:46 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/08 22:17:29 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/06/18 23:31:00 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int				fill_map_line(char **data, t_map *map)
 		map->max = height > map->max ? height : map->max;
 		data_len++;
 	}
-	map->heightmap[map->size.y][data_len] = INT_MIN;
+	map->heightmap[map->size.y][data_len] = PX_END_OF_LINE;
 	return (data_len);
 }
 

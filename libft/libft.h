@@ -6,58 +6,15 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/23 20:34:49 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/28 19:48:27 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/06/11 22:12:54 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 # include <string.h>
-# include <stdint.h>
-# include <inttypes.h>
-# include <x86intrin.h>
-
-# ifdef __AVX__
-#  define LFT_AVX 1
-# else
-#  define LFT_AVX 0
-# endif
-
-# define GNL_BUFF_SIZE 300
-# define GNL_FLUSH (char**)INTPTR_MAX
-
-/*
-**	################ INTRISICS ################
-*/
-typedef uint32_t	t_queued;
-typedef void		t_listed;
-
-typedef struct	s_list
-{
-	t_listed		*content;
-	size_t			content_size;
-	struct s_list	*next;
-}				t_list;
-
-typedef struct	s_queue
-{
-	int				start;
-	int				end;
-	int				size;
-	t_queued		*arr;
-}				t_queue;
-
-typedef union	u_vec4
-{
-	struct
-	{
-		float	x;
-		float	y;
-		float	z;
-		float	w;
-	}				flt;
-	__m128			sse __attribute__((aligned(16)));
-}				t_vec4;
+# include "intrisics.h"
+# include "libft.gen"
 
 /*
 **	#################### LIBMEM ####################
@@ -71,6 +28,7 @@ void			*ft_memchr(const void *s, int c, size_t n);
 int				ft_memcmp(const void *s1, const void *s2, size_t n);
 void			*ft_memalloc(size_t size);
 void			ft_memdel(void **ap);
+void			ft_memfree(void *ap);
 void			*ft_mempcpy(void *dst, const void *src, size_t n);
 void			ft_mem64set(uint64_t *mem, uint64_t data, size_t memlen);
 void			ft_mem32set(uint32_t *mem, uint32_t data, size_t memlen);
@@ -110,6 +68,7 @@ char			*ft_strrev(char *str);
 int				ft_strcat_join(char **s1, char const *s2);
 char			*ft_stpcpy(char *dest, const char *src);
 int				ft_strncat_join(char **s1, char const *s2, size_t size);
+char			*ft_strndup(const char *s1, size_t maxlen);
 
 /*
 **	##################### LIBNB ####################
@@ -124,6 +83,9 @@ long			ft_labs(long i);
 double			ft_atof(const char *nptr);
 double			ft_atof_mv(char **nptr);
 int				ft_atoi_mv(char **nptr);
+int				ft_maxint(int a, int b);
+long			ft_maxlong(long a, long b);
+uint			ft_maxuint(uint a, uint b);
 
 /*
 **	#################### LIBCHAR ###################
@@ -155,6 +117,8 @@ int				get_next_line(const int fd, char **line);
 int				ft_printf(const char *restrict format, ...);
 int				ft_fprintf(int fd, const char *restrict format, ...);
 int				ft_sprintf(char *str, const char *restrict format, ...);
+int				ft_asprintf(char **strp, const char *fmt, ...);
+char			*ft_cprintf(const char *fmt, ...);
 
 /*
 **	##################### T_LST ####################
@@ -179,13 +143,10 @@ t_queue			*que_new(size_t len);
 void			que_destroy(t_queue *que);
 void			que_disp(const t_queue *que);
 int				que_isempty(const t_queue *que);
+t_queue			*que_flush(t_queue *q);
 
 /*
 **	##################### T_VEC4 ##################
-*/
-
-/*
-**	VEC4I
 */
 
 /*
@@ -216,6 +177,41 @@ int				que_isempty(const t_queue *que);
 **	void			vec4_newmat_aa(t_vec4 mat[4], const float f[4][4]);
 **	void			vec4_newmat_a(t_vec4 mat[4], const float f[16]);
 */
+
+/*
+**	T_VECTOR
+*/
+t_vector		*vector_init(t_vector *vec, const size_t reserved_len);
+t_vector		*vector_push(t_vector *vec, t_vected d);
+t_vector		*vector_realloc(t_vector *vec);
+void			vector_mapvoid(t_vector *v, void (*f)(t_vected*));
+t_vector		*vector_del_at(t_vector *v, size_t at);
+
+/*
+**	T_GARBAGE (sortof garbage collector)
+*/
+void			intrin__gb_fail(t_garbage *gb);
+void			intrin_gb_extend(t_garbage *gb);
+t_garbage		gb_init(void);
+void			gb_freeall(t_garbage *gb);
+void			gb_free(t_garbage *gb, void *ptr);
+void			gb_remove(t_garbage *gb, void *freed);
+void			*gb_malloc(t_garbage *gb, size_t size);
+void			*gb_add(t_garbage *gb, void *malloced);
+void			gb_defrag(t_garbage *gb);
+void			*gb_memalloc(t_garbage *gb, size_t size);
+void			*gb_realloc(t_garbage *gb, void *ptr, size_t new_size);
+t_garbage		*gb_init_existing(t_garbage *gb);
+
+/*
+**	T_MAP
+*/
+void			intrin_insert_fixup(t_rbtmap **root, t_rbtmap *z);
+void			intrin_rbtree_lft_rot(t_rbtmap **root, t_rbtmap *x);
+void			intrin_rbtree_rgt_rot(t_rbtmap **root, t_rbtmap *y);
+void			map_insert(t_rbtmap **root, t_map_key key, t_map_data *data);
+void			map_iter(t_rbtmap *root, void(*f)(t_map_key, t_map_data*));
+void			map_freeall(t_rbtmap **root);
 
 /*
 **	##################### other ####################

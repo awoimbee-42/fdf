@@ -6,7 +6,7 @@
 /*   By: awoimbee <awoimbee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/20 15:26:26 by awoimbee          #+#    #+#             */
-/*   Updated: 2019/04/28 23:44:22 by awoimbee         ###   ########.fr       */
+/*   Updated: 2019/06/18 23:28:25 by awoimbee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,52 +14,54 @@
 
 static void	draw_line_higrad(t_vertices p0, t_vertices p1, int *img, int win_w)
 {
-	t_vertices	delta;
+	int			delta[2];
+	int			color;
 	int			way_x;
 	int			error;
 
-	delta.x = p1.x - p0.x;
-	delta.y = p1.y - p0.y;
+	color = p0.color > p1.color ? p0.color : p1.color;
+	delta[0] = p1.x - p0.x;
+	delta[1] = p1.y - p0.y;
 	way_x = 1;
-	if (delta.x < 0 && (delta.x *= -1))
+	if (delta[0] < 0 && (delta[0] *= -1))
 		way_x = -1;
-	error = 2 * delta.x - delta.y;
+	error = 2 * delta[0] - delta[1];
 	while (p0.y < p1.y)
 	{
-		img[(p0.y * win_w + p0.x)] =
-		p0.color > p1.color ? p0.color : p1.color;
+		img[(p0.y * win_w + p0.x)] = color;
 		if (error > 0)
 		{
 			p0.x += way_x;
-			error -= 2 * delta.y;
+			error -= 2 * delta[1];
 		}
-		error += 2 * delta.x;
+		error += 2 * delta[0];
 		++p0.y;
 	}
 }
 
 static void	draw_line_lograd(t_vertices p0, t_vertices p1, int *img, int win_w)
 {
-	t_vertices	delta;
+	int			delta[2];
+	int			color;
 	int			way_y;
 	int			error;
 
-	delta.x = p1.x - p0.x;
-	delta.y = p1.y - p0.y;
+	color = p0.color > p1.color ? p0.color : p1.color;
+	delta[0] = p1.x - p0.x;
+	delta[1] = p1.y - p0.y;
 	way_y = 1;
-	if (delta.y < 0 && (delta.y *= -1))
+	if (delta[1] < 0 && (delta[1] *= -1))
 		way_y = -1;
-	error = 2 * delta.y - delta.x;
+	error = 2 * delta[1] - delta[0];
 	while (p0.x < p1.x)
 	{
-		img[(p0.y * win_w + p0.x)] =
-			p0.color > p1.color ? p0.color : p1.color;
+		img[(p0.y * win_w + p0.x)] = color;
 		if (error > 0)
 		{
 			p0.y += way_y;
-			error -= 2 * delta.x;
+			error -= 2 * delta[0];
 		}
-		error += 2 * delta.y;
+		error += 2 * delta[1];
 		++p0.x;
 	}
 }
@@ -91,14 +93,14 @@ void		draw_all_lines(t_vertices **buffer, int h, int win_w, int *imgdata)
 	while (++y < h)
 	{
 		x = -1;
-		while (buffer[y][++x].x != INT_MIN)
+		while (buffer[y][++x].x != PX_END_OF_LINE)
 		{
-			if (buffer[y][x].x == __INT_MAX__)
+			if (buffer[y][x].x == PX_OUTSIDE)
 				continue ;
-			if (y != 0 && buffer[y - 1][x].x != INT_MIN
-			&& buffer[y - 1][x].x != __INT_MAX__)
+			if (y != 0 && buffer[y - 1][x].x != PX_END_OF_LINE
+			&& buffer[y - 1][x].x != PX_OUTSIDE)
 				draw_line(buffer[y][x], buffer[y - 1][x], imgdata, win_w);
-			if (x != 0 && buffer[y][x - 1].x != __INT_MAX__)
+			if (x != 0 && buffer[y][x - 1].x != PX_OUTSIDE)
 				draw_line(buffer[y][x], buffer[y][x - 1], imgdata, win_w);
 		}
 	}
